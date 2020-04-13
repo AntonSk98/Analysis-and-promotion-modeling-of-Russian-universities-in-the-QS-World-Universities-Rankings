@@ -121,6 +121,7 @@ def polynomial_regression_analysis(excel_file):
         plt.legend()
         plt.savefig(general_path_to_save+'{}_regression.png'.format(criterion), bbox_inches='tight',)
         plt.close(plt.gcf())
+        print('Criterion: {}\nPolynomial coefficients: {}\nR-squared: {}\n**********'.format(criterion, cf, r_squared))
 
 
 def get_trendline_of_russian_unis_in_qs(excel_file):
@@ -137,3 +138,20 @@ def get_trendline_of_russian_unis_in_qs(excel_file):
         plt.xlabel('University position in QS 2020')
         plt.legend()
     plt.savefig(general_path_to_save+'trendlines.png', bbox_inches='tight',)
+    plt.close(plt.gcf())
+
+
+def get_russian_unis_info(excel_file):
+    qs_top_500_russian_unis = excel_file[excel_file['Country'] == 'Russia']
+    columns_info = ['Year 2020', 'Institution Name', ] + qs_university_rankings_criteria
+    qs_top_500_russian_unis_by_criteria = qs_top_500_russian_unis[columns_info]
+    plt.title('Russian universities in TOP-500 QS')
+    plt.figure(dpi=200)
+    table = plt.table(cellText=qs_top_500_russian_unis_by_criteria.values,
+              colLabels=columns_info, loc='center', colWidths=[0.05, 0.8, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+                      cellLoc='left', colLoc='left',)
+    table.auto_set_font_size(False)
+    table.set_fontsize(6)
+    plt.axis('off')
+    plt.savefig(general_path_to_save+'russian_unis_top_500.png', bbox_inches='tight')
+    plt.close(plt.gcf())
