@@ -20,7 +20,7 @@ Overall correlation example
 
 ![Alt text](./general_correlation_example.png)
 
-##Dynamical modeling promotion of Russian universities web-application
+## Dynamical modeling promotion of Russian universities web-application
 This part of the thesis is devoted to developing a web-application allowing to promote a university in QS World University Ranking by Overall Score as well as by each separate criterion.
 Angular is used to develop a client-side app.
 Spring is used to develop a server.
