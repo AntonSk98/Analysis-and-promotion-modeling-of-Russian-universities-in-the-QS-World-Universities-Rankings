@@ -1,0 +1,44 @@
+* {
+  font-family: "Times New Roman", sans-serif;
+  user-select: none !important;
+}
+
+.toggle-menu {
+  height: min-content;
+  cursor: pointer;
+  float: right;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.toggle-menu:hover {
+  opacity: 0.5;
+  text-shadow: 1px 0 #6c757d;
+  transition: all 0.4s ease 0s;
+}
+
+.qs-background-color {
+  background-color: #F4B300
+}
+
+.action-button {
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  border-radius: 20px;
+  background: #F4B300;
+  padding: 5px 15px;
+  border: none;
+}
+
+.action-button:hover {
+  background-color: #DC9D00;
+  transition: all 0.4s ease 0s;
+}
+
+.modal-table tr {
+ line-height: 1rem;
+}

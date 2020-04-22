@@ -1,0 +1,151 @@
+* {
+  font-family: "Times New Roman", sans-serif;
+  user-select: none !important;
+}
+.title {
+  color: #F4B300;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.action-button {
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  border-radius: 20px;
+  background: #F4B300;
+  padding: 0.3rem 0.8rem;
+  border: none;
+}
+
+.action-button:hover {
+  background-color: #DC9D00;
+  transition: all 0.4s ease 0s;
+}
+
+.coefficient-button {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+  padding: 0.3rem 0.3rem 0.2rem 0.2rem;
+}
+
+.header-line {
+  padding: 0;
+  height: 2px;
+  border: none;
+  background: rgb(249,178,30);
+  background: linear-gradient(135deg, rgba(249,178,30,1) 40%, rgba(108,117,125,1) 69%, rgba(0,0,0,1) 95%);
+  margin: 0.5rem 0;
+}
+
+.basic-dynamic-model {
+  width: 25rem;
+  pointer-events: none !important;
+}
+
+.model-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+
+.qs-color {
+  color: #F4B300;
+}
+
+.w-38 {
+  width: 38% !important;
+}
+
+.w-62 {
+  width: 62% !important;
+}
+
+.table-title {
+  width: 7rem !important;
+}
+
+.qs-background-color {
+  background-color: #F4B300;
+}
+
+tr {
+  line-height: 0.8rem;
+}
+
+.line-chart {
+  font-size: 1.8rem;
+}
+
+.k-input {
+  width: 4.8rem;
+  height: 1.5rem;
+}
+
+.modeling-body {
+  font-size: 1.2rem;
+}
+
+.warning-message {
+  width: 35%;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+.warning-message-text {
+  font-size: 1rem;
+}
+
+ngb-alert::ng-deep button {
+  outline: none !important;
+}
+
+.calculation {
+  opacity: 0.9;
+  background-color: #F4B300;
+  z-index: 1000;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+}
+
+.loading-msg {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.loadingDot {
+  width: 0.6rem;
+  height: 0.6rem;
+  background: #373B3E;
+  margin-bottom: 0.45rem;
+  animation: 1s infinite alternate anim-loadingDot;
+  animation-timing-function: ease-in;
+  border-radius: 999px;
+}
+
+/* set animation delay for each loading dot */
+.loadingDot--2 {
+  animation-delay: .12s;
+}
+
+.loadingDot--3 {
+  animation-delay: .24s;
+}
+
+.loadingDot--4 {
+  animation-delay: .36s;
+}
+
+/* keyframes for loading dot */
+@keyframes anim-loadingDot {
+  0% {
+    transform: scale( .4 );
+  }
+
+  100% {
+    transform: scale( .8 );
+  }
+}

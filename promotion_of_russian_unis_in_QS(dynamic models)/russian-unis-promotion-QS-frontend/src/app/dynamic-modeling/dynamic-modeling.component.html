@@ -1,0 +1,117 @@
+<div class="calculation" *ngIf="isLoading">
+  <div class="d-flex flex-column justify-content-center w-100 h-100 align-items-center">
+    <div class="loading-msg d-flex align-items-end">
+      <div>Calculating promotion for {{universityPromotion.dynamicType}}</div>
+      <div class="loadingDot loadingDot--1"></div>
+      <div class="loadingDot loadingDot--2"></div>
+      <div class="loadingDot loadingDot--3"></div>
+      <div class="loadingDot loadingDot--4"></div>
+    </div>
+    <div class="spinner-border mt-1"></div>
+  </div>
+</div>
+<div class="container overflow-hidden">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="header d-flex flex-column title">
+      <span>{{universityPromotion.dynamicType}} promotion</span>
+      <span>{{universityPromotion.university | uppercase}}</span>
+    </div>
+    <div class="">
+      <button [routerLink]="['/university-general-information/', universityPromotion.id, universityPromotion.university]"
+              class="action-button">Back<fa-icon [icon]="exitArrow" class="ml-1"></fa-icon></button>
+    </div>
+  </div>
+  <hr class="header-line m-0 mb-2">
+  <div class="d-flex justify-content-between mb-4">
+    <div class="first-base-model w-38">
+      <div class="model-title qs-color">Basic dynamic model for</div>
+      <div class="model-title qs-color mb-2">{{universityPromotion.university}} promotion</div>
+      <img src="./assets/dynamic models/first base dynamic model.PNG" class="basic-dynamic-model">
+      <hr class="header-line">
+      <div class="promotion-table">
+        <div class="model-title qs-color">{{universityPromotion.dynamicType}} promotion - Table information</div>
+        <table class="table table-bordered table-striped m-0 mt-2">
+          <thead>
+          <tr class="text-center">
+            <th scope="col" class="qs-background-color text-white text-left w-25">#</th>
+            <th scope="col" class="qs-background-color text-white text-left w-25">Time(Year)</th>
+            <th scope="col" class="qs-background-color text-white text-left">Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let row of tableData; index as i">
+            <td scope="row" class="font-weight-bold text-left">{{ i + 1 }}</td>
+            <td class="text-left">
+              {{ row.date }}
+            </td>
+            <td class="text-left">
+              {{ row.value }} <span class="small">out of</span> 100
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="w-100 ml-5">
+      <div class="qs-color model-title line-chart">Line chart promotion</div>
+      <canvas baseChart
+              [datasets]="test.lineChartData"
+              [labels]="test.lineChartLabels"
+              [colors]="test.lineChartColors"
+              [legend]="false"
+              [chartType]="'line'">
+      </canvas>
+      <hr class="header-line">
+      <div class="modeling-information" *ngIf="!isLoading">
+        <div class="qs-color model-title line-chart">Dynamic modeling information</div>
+        <div class="modeling-body">
+          <div class="d-flex align-items-baseline">
+            <div class="d-flex justify-content-start align-items-baseline">
+              <strong>
+                Most efficient promotion coefficient for
+                {{universityPromotion.dynamicType}}:
+              </strong>
+              <input class="form-control k-input ml-2"
+                     *ngIf="!coefficientEdited" type="number"
+                     disabled value="{{userPromotionCoefficient}}" step="0.01" max="1" min="0">
+              <input class="form-control k-input ml-2"
+                     *ngIf="coefficientEdited" type="number"
+                     value="{{userPromotionCoefficient}}" step="0.01" max="1" min="0"
+                     [(ngModel)]="userPromotionCoefficient">
+            </div>
+            <button *ngIf="!coefficientEdited"
+                    class="action-button coefficient-button ml-2"
+                    placement="left-bottom" [ngbTooltip]="tooltipMsg" (click)="onClickEdited()">
+              <fa-icon [icon]="edit" class="ml-1"></fa-icon>
+            </button>
+            <button *ngIf="coefficientEdited"
+                    class="action-button coefficient-button ml-2"
+                    (click)="onClickRecalculate()">
+              <fa-icon [icon]="apply" class="ml-1"></fa-icon>
+            </button>
+          </div>
+          <div class="font-weight-bold">
+            {{universityPromotion.dynamicType}} value by
+            {{tableData[tableData.length-1]?.date}} year: {{tableData[tableData.length-1]?.value}}
+          </div>
+          <div *ngIf="(userPromotionCoefficient > promotionCoefficient || userPromotionCoefficient < promotionCoefficient)">
+            <ngb-alert *ngIf="showWarningMessage" [type]="'warning'" class="warning-message" (close)="closeWarningMessage()">
+              <div class="qs-color text-center font-weight-bold">{{'warning!' | uppercase}}</div>
+              <div *ngIf="userPromotionCoefficient < promotionCoefficient"
+                   class="d-flex flex-column font-weight-bold warning-message-text">
+                Resources might be allocated inefficiently!
+                It's highly recommended to use the automatically calculated coefficient
+                for the most effective promotion modeling!
+              </div>
+              <div *ngIf="userPromotionCoefficient > promotionCoefficient"
+                   class="d-flex flex-column font-weight-bold warning-message-text">
+                Too many resources might used to promote this criterion! To make sure that the promotion
+                is reliable and accurate, please, use the automatically calculated coefficient!
+              </div>
+            </ngb-alert>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

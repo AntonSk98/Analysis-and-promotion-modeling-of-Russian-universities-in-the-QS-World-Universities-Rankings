@@ -1,0 +1,157 @@
+<ng-template #size let-c="close" let-d="dismiss">
+  <div class="modal-header qs-background-color">
+    <h4 class="modal-title text-white">{{classificationName}}</h4>
+    <span (click)="d('Cross click')" class="text-white pr-2 toggle-menu">&times;</span>
+  </div>
+  <div class="modal-body d-flex justify-content-between">
+    <div class="w-50 text-secondary">
+      Based on the (full time equivalent) size of the degree-seeking student body.
+      Where a number of students is not available, one will be estimated based on common characteristics of other
+      country institutions.
+    </div>
+    <div class="w-50">
+      <table class="table table-bordered table-striped mb-0 modal-table">
+        <thead>
+        <tr class="text-center">
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Type</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Size</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Students</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of classificationSize; index as i">
+          <td class="text-center">
+            {{ row.type}}
+          </td>
+          <td class="text-center">
+            {{ row.size }}
+          </td>
+          <td class="text-center">
+            {{ row.students }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer p-1">
+    <button (click)="c('Save click')" class="action-button">Ok</button>
+  </div>
+</ng-template>
+
+<ng-template #subjectRange let-c="close" let-d="dismiss">
+  <div class="modal-header qs-background-color">
+    <h4 class="modal-title text-white">{{classificationName}}</h4>
+    <span (click)="d('Cross click')" class="text-white pr-2 toggle-menu">&times;</span>
+  </div>
+  <div class="modal-body d-flex justify-content-between">
+    <div class="w-50 text-secondary">
+      Four categories based on the institution’s provision of
+      programs in the five broad faculty areas used in the university rankings.
+      There are also taken into considerations different publication habits of universities.
+    </div>
+    <div class="w-50">
+      <table class="table table-bordered table-striped mb-0 modal-table">
+        <thead>
+        <tr class="text-center">
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Type</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Focus</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Faculty area</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of classificationSubjectRange; index as i">
+          <td class="text-center">
+            {{ row.type}}
+          </td>
+          <td class="text-center">
+            {{ row.focus }}
+          </td>
+          <td class="text-center">
+            {{ row.facultyArea }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer p-1">
+    <button (click)="c('Save click')" class="action-button">Ok</button>
+  </div>
+</ng-template>
+<ng-template #age let-c="close" let-d="dismiss">
+  <div class="modal-header qs-background-color">
+    <h4 class="modal-title text-white">{{classificationName}}</h4>
+    <span (click)="d('Cross click')" class="text-white pr-2 toggle-menu">&times;</span>
+  </div>
+  <div class="modal-body d-flex justify-content-between">
+    <div class="w-50 text-secondary">
+      There are four different types of age classification represented. Based on the rankings, the highest rank has a
+      university with the historic classification type as well as the lowest rank has a new university with an age less
+      than 10 years old
+    </div>
+    <div class="w-50">
+      <table class="table table-bordered table-striped mb-0 modal-table">
+        <thead>
+        <tr class="text-center">
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Type</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Classification</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Age</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of classificationAge; index as i">
+          <td class="text-center">
+            {{ row.type}}
+          </td>
+          <td class="text-center">
+            {{ row.classification }}
+          </td>
+          <td class="text-center">
+            {{ row.age }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer p-1">
+    <button (click)="c('Save click')" class="action-button">Ok</button>
+  </div>
+</ng-template>
+<ng-template #researchIntensity let-c="close" let-d="dismiss">
+  <div class="modal-header qs-background-color">
+    <h4 class="modal-title text-white">{{classificationName}}</h4>
+    <span (click)="d('Cross click')" class="text-white pr-2 toggle-menu">&times;</span>
+  </div>
+  <div class="modal-body d-flex justify-content-between">
+    <div class="w-50 text-secondary">
+      The research levels are based on the publications retrieved from "Scopus" within a five year period
+      preceding the application of the classification. The highest research level is classified as "very high" whereas
+      the lowest possible one is classified as "low".
+    </div>
+    <div class="w-50">
+      <table class="table table-bordered table-striped mb-0 modal-table">
+        <thead>
+        <tr class="text-center">
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Type</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Research Intensity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of classificationResearchIntensity; index as i">
+          <td class="text-center">
+            {{ row.type}}
+          </td>
+          <td class="text-center">
+            {{ row.researchIntensity }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer p-1">
+    <button (click)="c('Save click')" class="action-button">Ok</button>
+  </div>
+</ng-template>

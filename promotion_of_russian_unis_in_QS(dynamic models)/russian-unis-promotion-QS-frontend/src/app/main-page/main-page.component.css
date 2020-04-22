@@ -1,0 +1,89 @@
+* {
+  font-family: "Times New Roman", sans-serif;
+  user-select: none !important;
+}
+
+.logo {
+  /*float: right;*/
+  width: 20%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.header-name {
+  font-size: 1.6rem;
+}
+
+.sub-name {
+  font-size: 1rem;
+  font-weight: bold !important;
+  line-height: 0.1rem;
+}
+
+#header-line {
+  padding: 0;
+  height: 2px;
+  border: none;
+  background: rgb(249,178,30);
+  background: linear-gradient(135deg, rgba(249,178,30,1) 40%, rgba(108,117,125,1) 69%, rgba(0,0,0,1) 95%);
+}
+
+.action-button {
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  border-radius: 20px;
+  background: #F4B300;
+  padding: 5px 25px;
+  border: none;
+}
+
+.action-button:hover {
+  background-color: #DC9D00;
+  transition: all 0.4s ease 0s;
+}
+
+.qs-background-color {
+  background-color: #F4B300;
+}
+
+.qs-color {
+  color: #F4B300;
+}
+
+.footer {
+  border-bottom: 1px solid white;
+}
+
+.footer-title {
+  font-size: 1.5rem;
+  color: white;
+}
+
+a {
+  color: #6c757d;
+  font-size: 1rem;
+  font-weight: lighter;
+}
+
+a:hover {
+  text-decoration: none;
+  color: white;
+  transition: all 0.4s ease 0s;
+}
+
+.personal-info {
+  line-height: 1.1rem;
+}
+
+.e-mail {
+  font-size: 0.8rem;
+}
+
+.main-block-height {
+  min-height: calc(100vh - 28.8vh);
+}
+
+.footer-height {
+  height: 27.5vh;
+}

@@ -1,0 +1,149 @@
+<div class="d-flex justify-content-between">
+  <div [@toggleMenu]="showMenu ? 'open' : 'closed'" class="menu pl-3">
+    <div class="d-flex justify-content-between">
+      <div class="mt-3 menu-title hidden-overflow-text">Run dynamic modeling for:</div>
+      <div (click)="toggleMenu()" class="text-white pr-2 toggle-menu">&times;</div>
+    </div>
+    <ul class="p-0">
+      <li class="mt-2 hidden-overflow-text"
+          [routerLink]="['/university-modeling/', universityId, universityName, criterionQS.academicReputation]">
+        <span class="text-white">#1</span>
+        {{criterionQS.academicReputation}} &#124;
+        <fa-icon [icon]="academic" class="ml-1"></fa-icon>
+      </li>
+      <li class="hidden-overflow-text"
+          [routerLink]="['/university-modeling/', universityId, universityName, criterionQS.employerReputation]">
+        <span class="text-white">#2</span>
+        {{criterionQS.employerReputation}} &#124;
+        <fa-icon [icon]="employer" class="ml-1"></fa-icon>
+      </li>
+      <li class="hidden-overflow-text"
+          [routerLink]="['/university-modeling/', universityId, universityName, criterionQS.facultyStudentRatio]">
+        <span class="text-white">#3</span>
+        {{criterionQS.facultyStudentRatio}} &#124;
+        <fa-icon [icon]="faculty" class="ml-1"></fa-icon>
+      </li>
+      <li class="hidden-overflow-text"
+          [routerLink]="['/university-modeling/', universityId, universityName, criterionQS.citationPerFaculty]">
+        <span class="text-white">#4</span>
+        {{criterionQS.citationPerFaculty}} &#124;
+        <fa-icon [icon]="citation" class="ml-1"></fa-icon>
+      </li>
+      <li class="hidden-overflow-text"
+          [routerLink]="['/university-modeling/', universityId, universityName, criterionQS.intFacultyRatio]">
+        <span class="text-white">#5</span>
+        {{criterionQS.intFacultyRatio}} &#124;
+        <fa-icon [icon]="intFaculty" class="ml-1"></fa-icon>
+      </li>
+      <li class="hidden-overflow-text"
+          [routerLink]="['/university-modeling/', universityId, universityName, criterionQS.intStudentRatio]">
+        <span class="text-white">#6</span>
+        {{criterionQS.intStudentRatio}} &#124;
+        <fa-icon [icon]="intStudent" class="ml-1"></fa-icon>
+      </li>
+      <li class="mb-2 hidden-overflow-text"
+          [routerLink]="['/university-modeling/', universityId, universityName, criterionQS.overallScore]">
+        <span class="text-white">#7</span>
+        {{criterionQS.overallScore}} &#124;
+        <fa-icon [icon]="overall" class="ml-1"></fa-icon>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="!showMenu" class="show-menu toggle-menu text-white pr-2 pl-2 pb-1 ml-1 mt-1" (click)="toggleMenu()">&#43;</div>
+  <div class="w-100 m-3">
+    <div class="d-flex justify-content-between align-items-baseline">
+      <div class="d-flex flex-column">
+        <span class="get-info-title">General Information</span>
+        <span class="uni-name text-secondary">{{universityName}}</span>
+      </div>
+      <div class="">
+        <button [routerLink]="'/main-page'"
+                class="action-button">Back<fa-icon [icon]="exitArrow" class="ml-1"></fa-icon></button>
+      </div>
+    </div>
+    <div *ngIf="pageNumber==0">
+      <div class="d-flex align-items-baseline justify-content-between">
+        <div class="text-secondary uni-name mt-4 mb-2">University Criteria</div>
+        <div class="control-panel text-center">
+          <fa-icon [icon]="left" class="left mr-05" (click)="nextTable()"></fa-icon>
+          <fa-icon [icon]="right" class="right ml-05" (click)="nextTable()"></fa-icon>
+        </div>
+      </div>
+      <table class="table table-bordered table-striped mb-0">
+        <thead>
+        <tr class="text-center">
+          <th scope="col" class="qs-background-color text-white font-weight-bold">#</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Criterion</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Year 2019</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Year 2020</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngIf="universityCriteriaLoading">
+          <td colspan="4" class="text-center">
+            <div class="spinner-border qs-color"></div>
+          </td>
+        </tr>
+        <tr *ngFor="let row of tableInfo; index as i">
+          <td scope="row" class="font-weight-bold text-center">{{ i + 1 }}</td>
+          <td class="text-left">
+            {{ row.criterion}}
+          </td>
+          <td class="text-center">
+            {{ row.year2019 }} <span class="small">out of</span> 100
+          </td>
+          <td class="text-center">
+            {{ row.year2020 }} <span class="small">out of</span> 100
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="pageNumber==1">
+      <div class="d-flex align-items-baseline justify-content-between">
+        <div class="text-secondary uni-name mt-4 mb-2">University Classification</div>
+        <div class="control-panel text-center">
+          <fa-icon [icon]="left" class="left mr-05" (click)="nextTable()"></fa-icon>
+          <fa-icon [icon]="right" class="right ml-05" (click)="nextTable()"></fa-icon>
+        </div>
+      </div>
+      <table class="table table-bordered table-striped mb-0">
+        <thead>
+        <tr class="text-center">
+          <th scope="col" class="qs-background-color text-white font-weight-bold">#</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Classification</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngIf="universityClassificationLoading">
+          <td colspan="3" class="text-center">
+            <div class="spinner-border qs-color"></div>
+          </td>
+        </tr>
+        <tr *ngFor="let row of uniParams; index as i">
+          <td scope="row" class="font-weight-bold text-center">{{ i + 1 }}</td>
+          <td class="text-left">
+            <div class="d-flex justify-content-between align-items-end">
+              <div>{{ row.classification}}</div>
+              <div class="small more-info-classification" (click)="openModal(row.classification)">click to read more</div>
+            </div>
+          </td>
+          <td class="text-center">
+            {{ row.type }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-2 mb-4 qs-color font-weight-bold">
+      QS
+      <span *ngIf="pageNumber===0">Criteria</span>
+      <span *ngIf="pageNumber===1">Classification</span>
+      of university - Table information
+    </div>
+  </div>
+</div>
+
+
+<app-university-classification-modal></app-university-classification-modal>

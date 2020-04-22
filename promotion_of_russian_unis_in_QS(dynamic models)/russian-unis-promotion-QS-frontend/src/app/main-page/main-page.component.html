@@ -1,0 +1,95 @@
+<div class="main-block-height">
+  <div class="header container d-flex justify-content-between align-items-start mt-2">
+    <img src="logo.png" class="logo text-secondary">
+    <div class="ml-4">
+      <div class="font-weight-bold header-name">Promotion of Russian universities in</div>
+      <div class="small sub-name text-right">QS World University Rankings</div>
+    </div>
+  </div>
+  <hr id="header-line">
+  <div class="container">
+    <div class="main-content text-center">
+      <h2>Russian university rankings</h2>
+      <table class="table table-bordered table-striped m-0 mt-3">
+        <thead>
+        <tr class="text-center">
+          <th scope="col" class="qs-background-color text-white font-weight-bold">#</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Rank 2020</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Rank 2019</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Institution Name</th>
+          <th scope="col" class="qs-background-color text-white font-weight-normal">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngIf="isLoading">
+          <td colspan="5" class="text-center">
+            <div class="spinner-border qs-color"></div>
+          </td>
+        </tr>
+        <tr *ngFor="let university of universities; index as i">
+          <td scope="row" class="font-weight-bold">{{ i + 1 }}</td>
+          <td class="text-center">
+            {{ university.year2020 }}
+          </td>
+          <td class="text-center">
+            {{ university.year2019 }}
+          </td>
+          <td class="text-left">
+            {{ university.university }}
+          </td>
+          <td class="text-center">
+            <button [routerLink]="['/university-general-information/', university.id, university.university]"
+                    class="action-button">Overview<fa-icon [icon]="rightArrow" class="ml-1"></fa-icon></button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-2 mb-4 qs-color font-weight-bold">
+      QS World University Rankings (only Russian universities) - Table information
+    </div>
+  </div>
+</div>
+<div class="qs-background-color footer-height">
+  <div class="container">
+    <div class="d-flex justify-content-between footer">
+      <div class="d-flex flex-column mt-2 mb-2 align-items-start">
+        <div class="footer-title">Rankings</div>
+        <a href="https://www.topuniversities.com/university-rankings/world-university-rankings/2020">
+          QS World University Rankings 2020
+        </a>
+        <a href="https://www.topuniversities.com/university-rankings/world-university-rankings/2019">
+          QS World University Rankings 2019
+        </a>
+        <a href="https://www.topuniversities.com/university-rankings/world-university-rankings/2018">
+          QS World University Rankings 2018
+        </a>
+      </div>
+      <div class="d-flex flex-column mt-2 mb-2 align-items-center">
+        <div class="footer-title">Community</div>
+        <a href="https://www.topuniversities.com/student-forum">
+          QS World Rankings Forum
+        </a>
+        <a href="https://www.topuniversities.com/student-info/university-news">
+          University Latest News
+        </a>
+        <a href="https://www.topuniversities.com/community">
+          Community Overview
+        </a>
+      </div>
+      <div class="d-flex flex-column mt-2 mb-2 align-items-end">
+        <div class="footer-title">Additional information</div>
+        <a href="https://www.topuniversities.com/qs-world-university-rankings/methodology">
+          QS World University Rankings Methodology
+        </a>
+        <a href="https://www.topuniversities.com/university-rankings-articles/world-university-rankings">
+          QS World University Related Articled
+        </a>
+      </div>
+    </div>
+    <div class="text-secondary text-right personal-info pt-1 pb-2">
+      <div>Developed by AntonSk98</div>
+      <div class="e-mail">antonskripin@gmail.com</div>
+    </div>
+  </div>
+</div>
