@@ -28,7 +28,8 @@ PostgreSQL is chosen to keep and operate with data.
 
 There are some screenshots of the web-app belo.
 
-##Dynamical modeling (client-side view)
+## Dynamical modeling (client-side view)
+
 <b>Home page screenshot example</b>
 
 ![Alt text](./web_app_main_page_example.PNG)
