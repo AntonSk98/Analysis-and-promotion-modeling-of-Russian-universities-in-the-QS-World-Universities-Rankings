@@ -1,0 +1,10 @@
+/promotion_of_russian_unis_in_QS(dynamic models)/russian-unis-promotion-QS-backend/.idea/.gitignore
+.idea
+META-INF
+configs
+classes
+maven-archiver
+default-compile
+default-testCompile
+lib
+*.war
