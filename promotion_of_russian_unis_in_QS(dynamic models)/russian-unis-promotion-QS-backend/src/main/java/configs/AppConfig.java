@@ -13,7 +13,7 @@ import static org.hibernate.cfg.Environment.*;
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
 @ComponentScans(value = {
-        @ComponentScan("DAO"),
+        @ComponentScan("dao"),
         @ComponentScan("services")
 })
 
@@ -68,7 +68,7 @@ public class AppConfig {
         //Setting C3P0 properties
         properties.putAll(setC3P0Properties());
         factoryBean.setHibernateProperties(properties);
-        factoryBean.setPackagesToScan("models");
+        factoryBean.setPackagesToScan("entities");
         return factoryBean;
     }
 

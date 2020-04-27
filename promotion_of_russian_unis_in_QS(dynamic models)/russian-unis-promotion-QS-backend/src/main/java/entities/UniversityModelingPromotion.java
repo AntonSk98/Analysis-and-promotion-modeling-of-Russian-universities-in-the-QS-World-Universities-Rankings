@@ -1,4 +1,4 @@
-package models;
+package entities;
 
 import javax.persistence.*;
 
@@ -11,10 +11,10 @@ public class UniversityModelingPromotion {
     private String efficientPromotionCoefficient;
     @Column(name = "user_promotion_coefficient")
     private String userPromotionCoefficient;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "critetion_id", referencedColumnName = "id")
     private CriteriaTableInQS criteriaTable;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "unviersity_id", referencedColumnName = "id")
     private RussianUniversitiesInQS russianUniversitiesInQS;
 

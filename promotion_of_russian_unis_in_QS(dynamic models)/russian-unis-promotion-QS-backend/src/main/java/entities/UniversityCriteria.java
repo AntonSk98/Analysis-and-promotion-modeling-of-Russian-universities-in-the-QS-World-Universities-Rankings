@@ -1,4 +1,4 @@
-package models;
+package entities;
 
 import javax.persistence.*;
 
@@ -11,10 +11,10 @@ public class UniversityCriteria {
     private float scoreRank2019;
     @Column(name = "score_rank_2020")
     private float scoreRank2020;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "criterion_id", referencedColumnName = "id")
     private CriteriaTableInQS criteriaTable;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "university_id", referencedColumnName = "id")
     private RussianUniversitiesInQS russianUniversitiesInQS;
 

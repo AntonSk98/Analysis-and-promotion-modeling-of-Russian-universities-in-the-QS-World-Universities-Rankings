@@ -1,4 +1,6 @@
-package models;
+package entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -10,7 +12,8 @@ public class ClassificationTableInQS {
     private int id;
     @Column(name = "classification_name")
     private String classificationName;
-    @OneToMany(mappedBy = "classificationTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy = "classificationTable", cascade = CascadeType.ALL)
     private Set<UniversityClassification> universityClassifications;
 
     public int getId() {

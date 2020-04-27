@@ -1,4 +1,4 @@
-package models;
+package entities;
 
 import javax.persistence.*;
 
@@ -9,10 +9,10 @@ public class UniversityClassification {
     private int id;
     @Column(name = "classification_type")
     private String classificationType;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "classification_id")
     private ClassificationTableInQS classificationTable;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "university_id")
     private RussianUniversitiesInQS russianUniversitiesInQS;
 
@@ -30,5 +30,21 @@ public class UniversityClassification {
 
     public void setRussianUniversitiesInQS(RussianUniversitiesInQS russianUniversitiesInQS) {
         this.russianUniversitiesInQS = russianUniversitiesInQS;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getClassificationType() {
+        return classificationType;
+    }
+
+    public void setClassificationType(String classificationType) {
+        this.classificationType = classificationType;
     }
 }

@@ -1,4 +1,6 @@
-package models;
+package entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -14,12 +16,16 @@ public class RussianUniversitiesInQS {
     private int rank2020;
     @Column(name = "institution_name")
     private String institutionName;
-    @OneToMany(mappedBy = "russianUniversitiesInQS", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy = "russianUniversitiesInQS", cascade = CascadeType.ALL)
     private Set<UniversityClassification> universityClassifications;
+    @JsonIgnore
     @OneToMany(mappedBy = "russianUniversitiesInQS", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UniversityCriteria> universityCriteria;
+    @JsonIgnore
     @OneToMany(mappedBy = "russianUniversitiesInQS", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<FundamentalUniversityDataInQS> fundamentalUniversityDataInQS;
+    @JsonIgnore
     @OneToMany(mappedBy = "russianUniversitiesInQS", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UniversityModelingPromotion> universityModelingPromotions;
 
