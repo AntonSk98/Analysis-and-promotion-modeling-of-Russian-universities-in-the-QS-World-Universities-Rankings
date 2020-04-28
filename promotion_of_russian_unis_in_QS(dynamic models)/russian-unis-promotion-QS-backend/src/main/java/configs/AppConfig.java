@@ -39,7 +39,7 @@ public class AppConfig {
         properties.put(DIALECT, environment.getProperty("hibernate.dialect"));
         if (Boolean.parseBoolean(System.getProperty("initial_start"))) {
             properties.put(HBM2DDL_AUTO, environment.getProperty("hibernate.hbm2ddl.auto.create"));
-            properties.put("hibernate.hbm2ddl.import_files", "init_initial_data.sql");
+            properties.put(HBM2DDL_IMPORT_FILES, environment.getProperty("hibernate.import_files"));
         } else {
             properties.put(HBM2DDL_AUTO, environment.getProperty("hibernate.hbm2ddl.auto.update"));
         }
