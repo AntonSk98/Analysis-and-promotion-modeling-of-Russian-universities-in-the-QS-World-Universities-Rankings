@@ -1,7 +1,7 @@
 package dao.universityGeneralInformation;
 
 import models.UniversityClassificationModel;
-import models.UniversityCriteriaModel;
+import models.UniversityCriterionModel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,12 @@ public class UniversityGeneralInformationDaoImpl implements UniversityGeneralInf
     }
 
     @Override
-    public List<UniversityCriteriaModel> getCriteriaById(int university_id) {
-        String query = "select new models.UniversityCriteriaModel(id, russianUniversitiesInQS.institutionName, criteriaTable.criterionName, scoreRank2019, scoreRank2020) from university_criteria  where russianUniversitiesInQS.id = :university_id";
+    public List<UniversityCriterionModel> getCriteriaById(int university_id) {
+        String query = "select new models.UniversityCriterionModel(id, russianUniversitiesInQS.institutionName, criteriaTable.criterionName, scoreRank2019, scoreRank2020) from university_criteria  where russianUniversitiesInQS.id = :university_id";
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery(
                 query,
-                UniversityCriteriaModel.class)
+                UniversityCriterionModel.class)
                 .setParameter("university_id", university_id).list();
     }
 }

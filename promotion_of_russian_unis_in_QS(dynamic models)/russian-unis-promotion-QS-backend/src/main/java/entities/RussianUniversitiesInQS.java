@@ -24,20 +24,17 @@ public class RussianUniversitiesInQS {
     private Set<UniversityCriteria> universityCriteria;
     @JsonIgnore
     @OneToMany(mappedBy = "russianUniversitiesInQS", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<FundamentalUniversityDataInQS> fundamentalUniversityDataInQS;
-    @JsonIgnore
-    @OneToMany(mappedBy = "russianUniversitiesInQS", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UniversityModelingPromotion> universityModelingPromotions;
 
     public int getId() {
         return id;
     }
 
-    public float getRank2019() {
+    public double getRank2019() {
         return rank2019;
     }
 
-    public float getRank2020() {
+    public double getRank2020() {
         return rank2020;
     }
 
@@ -75,14 +72,6 @@ public class RussianUniversitiesInQS {
 
     public void setUniversityCriteria(Set<UniversityCriteria> universityCriteria) {
         this.universityCriteria = universityCriteria;
-    }
-
-    public Set<FundamentalUniversityDataInQS> getFundamentalUniversityDataInQS() {
-        return fundamentalUniversityDataInQS;
-    }
-
-    public void setFundamentalUniversityDataInQS(Set<FundamentalUniversityDataInQS> fundamentalUniversityDataInQS) {
-        this.fundamentalUniversityDataInQS = fundamentalUniversityDataInQS;
     }
 
     public Set<UniversityModelingPromotion> getUniversityModelingPromotions() {

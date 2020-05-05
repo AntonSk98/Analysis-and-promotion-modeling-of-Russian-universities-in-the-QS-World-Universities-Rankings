@@ -1,9 +1,8 @@
 package services.universityGeneralInformation;
 
-import dao.topRussianUniversities.TopRussianUniversitiesDao;
 import dao.universityGeneralInformation.UniversityGeneralInformationDao;
 import models.UniversityClassificationModel;
-import models.UniversityCriteriaModel;
+import models.UniversityCriterionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ public class UniversityGeneralInformationServiceImpl implements UniversityGenera
 
     @Override
     @Transactional
-    public List<UniversityCriteriaModel> getUniversityCriteriaById(int university_id) {
+    public List<UniversityCriterionModel> getUniversityCriteriaById(int university_id) {
         return universityGeneralInformationDao.getCriteriaById(university_id);
     }
 }

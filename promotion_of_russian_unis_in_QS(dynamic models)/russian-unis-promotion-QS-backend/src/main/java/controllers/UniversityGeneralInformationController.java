@@ -1,7 +1,7 @@
 package controllers;
 
 import models.UniversityClassificationModel;
-import models.UniversityCriteriaModel;
+import models.UniversityCriterionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,7 +25,7 @@ public class UniversityGeneralInformationController {
     }
 
     @GetMapping(value = "/get/university_criteria/{university_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UniversityCriteriaModel> getUniversityCriteriaById(@PathVariable int university_id) {
+    public List<UniversityCriterionModel> getUniversityCriteriaById(@PathVariable int university_id) {
         return universityGeneralInformationService.getUniversityCriteriaById(university_id);
     }
 }

@@ -8,9 +8,9 @@ public class UniversityCriteria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "score_rank_2019")
-    private float scoreRank2019;
+    private double scoreRank2019;
     @Column(name = "score_rank_2020")
-    private float scoreRank2020;
+    private double scoreRank2020;
     @ManyToOne()
     @JoinColumn(name = "criterion_id", referencedColumnName = "id")
     private CriteriaTableInQS criteriaTable;
@@ -26,19 +26,19 @@ public class UniversityCriteria {
         this.id = id;
     }
 
-    public float getScoreRank2019() {
+    public double getScoreRank2019() {
         return scoreRank2019;
     }
 
-    public void setScoreRank2019(float scoreRank2019) {
+    public void setScoreRank2019(double scoreRank2019) {
         this.scoreRank2019 = scoreRank2019;
     }
 
-    public float getScoreRank2020() {
+    public double getScoreRank2020() {
         return scoreRank2020;
     }
 
-    public void setScoreRank2020(float scoreRank2020) {
+    public void setScoreRank2020(double scoreRank2020) {
         this.scoreRank2020 = scoreRank2020;
     }
 

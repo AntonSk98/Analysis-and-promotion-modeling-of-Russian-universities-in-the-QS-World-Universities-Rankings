@@ -1,22 +1,57 @@
 package entities;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity(name = "university_modeling_promotion")
 public class UniversityModelingPromotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "efficient_promotion_coefficient")
-    private String efficientPromotionCoefficient;
-    @Column(name = "user_promotion_coefficient")
-    private String userPromotionCoefficient;
+    @Column(name = "promotion_date")
+    private LocalDateTime calculationDate;
+    @Column(name = "promotion_coefficient")
+    private double promotionCoefficient;
+    @Column(name = "start_date")
+    private double startDate;
+    @Column(name = "start_value")
+    private  double startValue;
+    @Column(name = "target_date")
+    private double targetDate;
+    @Column(name = "promotion_value")
+    private double promotionValue;
+    @Column(name = "promotion_step")
+    private double promotionStep;
     @ManyToOne()
     @JoinColumn(name = "critetion_id", referencedColumnName = "id")
     private CriteriaTableInQS criteriaTable;
     @ManyToOne()
     @JoinColumn(name = "unviersity_id", referencedColumnName = "id")
     private RussianUniversitiesInQS russianUniversitiesInQS;
+
+    public double getPromotionStep() {
+        return promotionStep;
+    }
+
+    public void setPromotionStep(double promotionStep) {
+        this.promotionStep = promotionStep;
+    }
+
+    public double getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(double initialDate) {
+        this.startDate = initialDate;
+    }
+
+    public double getTargetDate() {
+        return targetDate;
+    }
+
+    public void setTargetDate(double targetDate) {
+        this.targetDate = targetDate;
+    }
 
     public int getId() {
         return id;
@@ -26,20 +61,36 @@ public class UniversityModelingPromotion {
         this.id = id;
     }
 
-    public String getEfficientPromotionCoefficient() {
-        return efficientPromotionCoefficient;
+    public double getStartValue() {
+        return startValue;
     }
 
-    public void setEfficientPromotionCoefficient(String efficientPromotionCoefficient) {
-        this.efficientPromotionCoefficient = efficientPromotionCoefficient;
+    public void setStartValue(double initialValue) {
+        this.startValue = initialValue;
     }
 
-    public String getUserPromotionCoefficient() {
-        return userPromotionCoefficient;
+    public double getPromotionValue() {
+        return promotionValue;
     }
 
-    public void setUserPromotionCoefficient(String userPromotionCoefficient) {
-        this.userPromotionCoefficient = userPromotionCoefficient;
+    public void setPromotionValue(double promotionValue) {
+        this.promotionValue = promotionValue;
+    }
+
+    public LocalDateTime getCalculationDate() {
+        return calculationDate;
+    }
+
+    public void setCalculationDate(LocalDateTime promotionDate) {
+        this.calculationDate = promotionDate;
+    }
+
+    public double getPromotionCoefficient() {
+        return promotionCoefficient;
+    }
+
+    public void setPromotionCoefficient(double userPromotionCoefficient) {
+        this.promotionCoefficient = userPromotionCoefficient;
     }
 
     public CriteriaTableInQS getCriteriaTable() {

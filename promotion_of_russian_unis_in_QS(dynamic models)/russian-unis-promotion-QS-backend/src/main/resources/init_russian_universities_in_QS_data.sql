@@ -7,7 +7,7 @@ INSERT INTO russian_universities_in_qs (id, institution_name, rank_2019, rank_20
 INSERT INTO russian_universities_in_qs (id, institution_name, rank_2019, rank_2020) VALUES (7, 'National Research University - Higher School of Economics (HSE)', 343, 322);
 INSERT INTO russian_universities_in_qs (id, institution_name, rank_2019, rank_2020) VALUES (8, 'National Research Nuclear University "MEPhI" (Moscow Engineering Physics Institute)', 329, 329);
 INSERT INTO russian_universities_in_qs (id, institution_name, rank_2019, rank_2020) VALUES (9, 'Ural Federal University', 412, 364);
-INSERT INTO russian_universities_in_qs (id, institution_name, rank_2019, rank_2020) VALUES (10, 'Moscow State Institute of International Relations – MGIMO University', 355, 366);
+INSERT INTO russian_universities_in_qs (id, institution_name, rank_2019, rank_2020) VALUES (10, 'Moscow State Institute of International Relations - MGIMO University', 355, 366);
 
 
 

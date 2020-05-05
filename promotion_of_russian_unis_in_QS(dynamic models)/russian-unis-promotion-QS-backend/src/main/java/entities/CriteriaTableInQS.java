@@ -13,8 +13,6 @@ public class CriteriaTableInQS {
     @OneToMany(mappedBy = "criteriaTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UniversityCriteria> criteriaTableInQS;
     @OneToMany(mappedBy = "criteriaTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<FundamentalUniversityDataInQS> fundamentalUniversityDataInQS;
-    @OneToMany(mappedBy = "criteriaTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UniversityModelingPromotion> universityModelingPromotion;
 
     public int getId() {
@@ -39,14 +37,6 @@ public class CriteriaTableInQS {
 
     public void setCriteriaTableInQS(Set<UniversityCriteria> criteriaTableInQS) {
         this.criteriaTableInQS = criteriaTableInQS;
-    }
-
-    public Set<FundamentalUniversityDataInQS> getFundamentalUniversityDataInQS() {
-        return fundamentalUniversityDataInQS;
-    }
-
-    public void setFundamentalUniversityDataInQS(Set<FundamentalUniversityDataInQS> fundamentalUniversityDataInQS) {
-        this.fundamentalUniversityDataInQS = fundamentalUniversityDataInQS;
     }
 
     public Set<UniversityModelingPromotion> getUniversityModelingPromotion() {
