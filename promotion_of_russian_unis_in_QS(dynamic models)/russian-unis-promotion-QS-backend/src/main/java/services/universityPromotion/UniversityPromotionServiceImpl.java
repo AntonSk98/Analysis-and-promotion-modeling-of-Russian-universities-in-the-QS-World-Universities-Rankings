@@ -255,6 +255,14 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
         universityPromotionDao.deletePromotionDataByIds(universityId, criterionId);
     }
 
+    @Override
+    @Transactional
+    public int getUniversityPromotionLaunces(String universityName, String promotionCriterion) {
+        int universityId = universityPromotionDao.getUniversityIdByUniversityName(universityName);
+        int criterionId = universityPromotionDao.getCriterionIdByCriterionName(promotionCriterion);
+        return universityPromotionDao.getNumberOfUniversityPromotionLaunches(universityId, criterionId);
+    }
+
     public double getFinalPromotionCoefficient() {
         return finalPromotionCoefficient;
     }

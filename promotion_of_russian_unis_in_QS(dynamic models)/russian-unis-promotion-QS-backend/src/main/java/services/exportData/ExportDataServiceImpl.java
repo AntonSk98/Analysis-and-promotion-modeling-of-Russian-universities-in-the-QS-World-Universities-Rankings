@@ -147,7 +147,7 @@ public class ExportDataServiceImpl implements ExportDataService {
             cell.setCellValue(universityPromotionRow.isAutoCalculatedPromotion());
         }
 
-        File file = new File(path+"\\employee.xls");
+        File file = new File(path+"\\"+universityName+"_promotion_by"+criterionName+".xls");
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
         outFile.close();

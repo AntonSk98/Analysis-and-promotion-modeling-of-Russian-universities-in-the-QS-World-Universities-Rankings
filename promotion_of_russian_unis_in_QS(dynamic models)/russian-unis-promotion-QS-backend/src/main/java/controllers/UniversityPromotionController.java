@@ -47,6 +47,14 @@ public class UniversityPromotionController {
         return universityPromotionService.getAutoCalculatedPromotionCoefficient(universityName, promotionCriterion, startDate, targetDate, promotionStep);
     }
 
+    @GetMapping(value = "/api/get/university_promotion_launches", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int getUniversityPromotionLanches(
+            @RequestParam(name = "university_name") String universityName,
+            @RequestParam(name = "promotion_criterion") String promotionCriterion
+    ) {
+        return universityPromotionService.getUniversityPromotionLaunces(universityName, promotionCriterion);
+    }
+
     @DeleteMapping(value = "/api/delete/promotion_data")
     public ResponseEntity<HttpStatus> deletePromotionData(
             @RequestParam(name = "university_name") String universityName,

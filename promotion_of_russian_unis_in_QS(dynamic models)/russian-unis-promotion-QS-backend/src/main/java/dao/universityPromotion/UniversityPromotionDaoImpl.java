@@ -100,4 +100,15 @@ public class UniversityPromotionDaoImpl implements UniversityPromotionDao {
                 .setParameter("criterionId", criterionId)
                 .executeUpdate();
     }
+
+    @Override
+    public int getNumberOfUniversityPromotionLaunches(int universityId, int criterionId) {
+        return sessionFactory.getCurrentSession().createQuery(
+                "from university_modeling_promotion where russianUniversitiesInQS.id =:universityId and criteriaTable.id =:criterionId"
+        )
+                .setParameter("universityId", universityId)
+                .setParameter("criterionId", criterionId)
+                .list()
+                .size();
+    }
 }

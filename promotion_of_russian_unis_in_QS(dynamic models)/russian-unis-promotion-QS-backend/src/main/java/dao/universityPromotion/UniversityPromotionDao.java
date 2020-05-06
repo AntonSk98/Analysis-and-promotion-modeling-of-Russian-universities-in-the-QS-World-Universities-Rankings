@@ -24,4 +24,6 @@ public interface UniversityPromotionDao {
     double getAutocalculatedPromotionCoefficient(int universityId, int criterionId, double startDate, double targetDate, double promotionStep);
 
     void deletePromotionDataByIds(int universityId, int criterionId);
+
+    int getNumberOfUniversityPromotionLaunches(int universityId, int criterionId);
 }

@@ -45,4 +45,6 @@ public interface UniversityPromotionService {
     double getAutoCalculatedPromotionCoefficient(String universityName, String promotionCriterion, double startDate, double targetDate, double promotionStep);
 
     void deletePromotionDataByUniIAndCriterion(String universityName, String promotionCriterion);
+
+    int getUniversityPromotionLaunces(String universityName, String promotionCriterion);
 }

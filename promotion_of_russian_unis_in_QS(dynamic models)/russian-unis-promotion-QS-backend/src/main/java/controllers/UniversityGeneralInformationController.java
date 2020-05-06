@@ -4,10 +4,7 @@ import models.UniversityClassificationModel;
 import models.UniversityCriterionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import services.universityGeneralInformation.UniversityGeneralInformationService;
 
 import java.util.List;
@@ -19,13 +16,17 @@ public class UniversityGeneralInformationController {
     @Autowired
     private UniversityGeneralInformationService universityGeneralInformationService;
 
-    @GetMapping(value = "/get/university_classification/{university_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UniversityClassificationModel> getUniversityClassificationById(@PathVariable int university_id) {
+    @GetMapping(value = "/get/university_classification", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UniversityClassificationModel> getUniversityClassificationById(
+            @RequestParam(name = "university_id") int university_id
+    ) {
         return universityGeneralInformationService.getUniversityClassificationById(university_id);
     }
 
-    @GetMapping(value = "/get/university_criteria/{university_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UniversityCriterionModel> getUniversityCriteriaById(@PathVariable int university_id) {
+    @GetMapping(value = "/get/university_criteria", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UniversityCriterionModel> getUniversityCriteriaById(
+            @RequestParam(name = "university_id") int university_id
+    ) {
         return universityGeneralInformationService.getUniversityCriteriaById(university_id);
     }
 }
