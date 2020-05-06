@@ -2,6 +2,7 @@ package services.exportData;
 
 import dao.exportData.ExportDataDao;
 import entities.UniversityModelingPromotion;
+import j2html.tags.DomContent;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -13,12 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
+
+import static j2html.TagCreator.*;
 
 @Service
 public class ExportDataServiceImpl implements ExportDataService {
@@ -33,13 +35,27 @@ public class ExportDataServiceImpl implements ExportDataService {
         String universityName = exportDataDao.getUniversityNameByUniversityId(universityId);
         String criterionName = exportDataDao.getUniversityCriterionByCriterionId(criterionId);
         try {
-            exportPromotionData(universityName, criterionName, path, universityPromotionData);
+            exportPromotionDataIntoExcelFile(universityName, criterionName, path, universityPromotionData);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void exportPromotionData(String universityName, String criterionName, String path, List<UniversityModelingPromotion> universityPromotionData) throws IOException {
+    @Override
+    @Transactional
+    public void exportPromotionDataIntoHtmlByUniIdAndCriterionId(int universityId, int criterionId, String path) {
+        List<UniversityModelingPromotion> universityPromotionData= exportDataDao.getPromotionInfoByUniIdAndCriterionId(universityId, criterionId);
+        String universityName = exportDataDao.getUniversityNameByUniversityId(universityId);
+        String criterionName = exportDataDao.getUniversityCriterionByCriterionId(criterionId);
+        try {
+            exportPromotionDataIntoHtmlFile(universityName, criterionName, path, universityPromotionData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void exportPromotionDataIntoExcelFile(String universityName, String criterionName, String path, List<UniversityModelingPromotion> universityPromotionData) throws IOException {
         int rowNumber = 0;
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet worksheet = workbook.createSheet(universityName + "promotion data");
@@ -138,6 +154,53 @@ public class ExportDataServiceImpl implements ExportDataService {
         workbook.close();
     }
 
+    @Override
+    public void exportPromotionDataIntoHtmlFile(String universityName, String criterionName, String path, List<UniversityModelingPromotion> universityPromotionData) throws IOException {
+        String htmlDoc = html(
+                style(".qs-color {color: #F9B21E;}"),
+                style(".text-center {text-align: center;}"),
+                style("table {border-collapse: collapse; display: flex; justify-content: center; min-height: calc(85vh - 2rem);}"),
+                style("th, td {border:1px solid black; padding: 0.4rem;}"),
+                style(".header {background-color: #F9B21E;}"),
+                style(".footer_note {display: flex; justify-content:flex-end; margin-top: 1rem; font-weight: bold; height: 2rem;"),
+                head(
+                        title("Title")
+                ),
+                body(
+                        h1(attrs(".qs-color.text-center"), universityName + " promotion by "+criterionName),
+                        table(
+                                tr(attrs(".header"),
+                                        th("Promotion date"),
+                                        th("Promotion coefficient"),
+                                        th("Start date"),
+                                        th("Start value"),
+                                        th("Target date"),
+                                        th("Promotion value"),
+                                        th("Promotion step"),
+                                        th("Coefficient is auto-calculated")
+                                ),
+                                each(universityPromotionData, rowUniversityData -> tr(
+                                        td(String.valueOf(rowUniversityData.getCalculationDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)))),
+                                        td(String.valueOf(rowUniversityData.getPromotionCoefficient())),
+                                        td(String.valueOf(rowUniversityData.getStartDate())),
+                                        td(String.valueOf(rowUniversityData.getStartValue())),
+                                        td(String.valueOf(rowUniversityData.getTargetDate())),
+                                        td(String.valueOf(rowUniversityData.getPromotionValue())),
+                                        td(String.valueOf(rowUniversityData.getPromotionStep())),
+                                        td(String.valueOf(rowUniversityData.isAutoCalculatedPromotion()).toUpperCase())
+                                ))
+                        )
+                ),
+                footer(attrs(".footer_note.qs-color"),
+                        div("This webpage was generated automatically!")
+                )
+        ).render();
+        File newHtmlFile = new File(path+"\\"+universityName+"_promotion_by"+criterionName+".html");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(newHtmlFile));
+        writer.write(htmlDoc);
+        writer.close();
+    }
+
     private HSSFCellStyle createStyleForHeader(HSSFWorkbook workbook) {
         HSSFFont font = workbook.createFont();
         font.setBold(true);
@@ -145,4 +208,5 @@ public class ExportDataServiceImpl implements ExportDataService {
         style.setFont(font);
         return style;
     }
+
 }
