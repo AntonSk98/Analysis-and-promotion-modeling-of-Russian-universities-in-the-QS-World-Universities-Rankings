@@ -164,7 +164,7 @@ public class ExportDataServiceImpl implements ExportDataService {
                 style(".header {background-color: #F9B21E;}"),
                 style(".footer_note {display: flex; justify-content:flex-end; margin-top: 1rem; font-weight: bold; height: 2rem;"),
                 head(
-                        title("Title")
+                        title("University promotion information")
                 ),
                 body(
                         h1(attrs(".qs-color.text-center"), universityName + " promotion by "+criterionName),
