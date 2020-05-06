@@ -21,7 +21,7 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
 
     @Override
     @Transactional
-    public List<UniversityPromotionModel> conductUniversityPromotionByCriterion(String universityName, String promotionCriterion, double startDate, double targetDate, double promotionStep) {
+    public List<UniversityPromotionModel> conductUniversityPromotionByCriterion(String universityName, String promotionCriterion, double startDate, double targetDate, double promotionStep, Double coefficient) {
         final int universityId = universityPromotionDao.getUniversityIdByUniversityName(universityName);
         final int criterionId = universityPromotionDao.getCriterionIdByCriterionName(promotionCriterion);
         UniversityCriterionModel universityCriterionInfo = universityPromotionDao
@@ -35,17 +35,18 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
                 universityCriterionInfo.getRank2020(),
                 targetDate,
                 promotionStep,
-                1
+                1,
+                coefficient
         ));
-        savePromotionData(universityId, criterionId, universityPromotiondata.getFirst().getPromotionValue(), universityPromotiondata.getLast().getPromotionValue(), this.finalPromotionCoefficient, startDate, targetDate, promotionStep);
+        savePromotionData(universityId, criterionId, universityPromotiondata.getFirst().getPromotionValue(), universityPromotiondata.getLast().getPromotionValue(), this.finalPromotionCoefficient, startDate, targetDate, promotionStep, isAutoCalculatedPromotion(coefficient));
         return universityPromotiondata;
     }
 
     @Override
     @Transactional
-    public List<UniversityPromotionModel> conductOverallPromotion(String universityName, double startDate, double targetDate, double promotionStep) {
+    public List<UniversityPromotionModel> conductOverallPromotion(String universityName, double startDate, double targetDate, double promotionStep, Double coefficient) {
         DecimalFormat decimalFormat = new DecimalFormat("0.0000");
-        Map<String, List<UniversityPromotionModel>> universityPromotionByAllCritera = getMapOfUniversityPromotionByAllCriteria(universityName, startDate, targetDate, promotionStep);
+        Map<String, List<UniversityPromotionModel>> universityPromotionByAllCritera = getMapOfUniversityPromotionByAllCriteria(universityName, startDate, targetDate, promotionStep, coefficient);
         LinkedList<UniversityPromotionModel> overallPromotion = new LinkedList<>();
         double academicReputation;
         double employerReputation;
@@ -71,14 +72,14 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
         }
         int universityId = universityPromotionDao.getUniversityIdByUniversityName(universityName);
         int criterionId = universityPromotionDao.getCriterionIdByCriterionName("Overall Score");
-        savePromotionData(universityId, criterionId, overallPromotion.getFirst().getPromotionValue(), overallPromotion.getLast().getPromotionValue(), -1, startDate, targetDate, promotionStep);
+        savePromotionData(universityId, criterionId, overallPromotion.getFirst().getPromotionValue(), overallPromotion.getLast().getPromotionValue(), -1, startDate, targetDate, promotionStep, isAutoCalculatedPromotion(coefficient));
         return overallPromotion;
     }
 
     @Override
-    public void savePromotionData(int universityId, int criterionId, double initialValue, double promotionValue, double promotionCoefficient, double startDate, double targetDate, double promotionStep) {
+    public void savePromotionData(int universityId, int criterionId, double initialValue, double promotionValue, double promotionCoefficient, double startDate, double targetDate, double promotionStep, boolean autoCalculatedPromotion) {
         LocalDateTime currentDate = LocalDateTime.now();
-        universityPromotionDao.savePromotionData(currentDate, initialValue, promotionValue, promotionCoefficient, criterionId, universityId, startDate, targetDate, promotionStep);
+        universityPromotionDao.savePromotionData(currentDate, initialValue, promotionValue, promotionCoefficient, criterionId, universityId, startDate, targetDate, promotionStep, autoCalculatedPromotion);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
 
     @Override
     @Transactional
-    public Map<String, List<UniversityPromotionModel>> getMapOfUniversityPromotionByAllCriteria(String universityName, double startDate, double targetDate, double promotionStep) {
+    public Map<String, List<UniversityPromotionModel>> getMapOfUniversityPromotionByAllCriteria(String universityName, double startDate, double targetDate, double promotionStep, Double coefficient) {
         List<String> criteriaList = getCriteraList();
         Map<String, List<UniversityPromotionModel>> universityPromotionByAllCritera = new LinkedHashMap<>();
         for (String criterion: criteriaList) {
@@ -111,7 +112,8 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
                     universityCriterionInfo.getRank2020(),
                     targetDate,
                     promotionStep,
-                    1
+                    1,
+                    coefficient
             ));
             universityPromotionByAllCritera.put(criterion, universityPromotionData);
         }
@@ -125,13 +127,15 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
     }
 
     @Override
-    public List<UniversityPromotionModel> conductUniversityPromotion(double previousDate, double previousValue, double startPromotionDate, double startPromotionValue, double targetDate, double stepOfPromotion, double adjustedTime) {
+    public List<UniversityPromotionModel> conductUniversityPromotion(double previousDate, double previousValue, double startPromotionDate, double startPromotionValue, double targetDate, double stepOfPromotion, double adjustedTime, Double coefficient) {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         final double desiredValue = getDesiredValueForPromotion(previousValue, startPromotionValue, targetDate - startPromotionDate);
-        double coefficient = getPromotionCoefficient(previousDate, previousValue, startPromotionValue, startPromotionDate, stepOfPromotion, adjustedTime);
-        double finalPromotionValue = getPromotionValues(startPromotionDate, startPromotionValue, desiredValue, targetDate, stepOfPromotion, coefficient, adjustedTime).getLast().getPromotionValue();
-        if (finalPromotionValue > desiredValue)
-            coefficient = adjustPromotionCoefficient(startPromotionDate, startPromotionValue, desiredValue, targetDate, finalPromotionValue, stepOfPromotion, coefficient, adjustedTime);
+        if (coefficient == null) {
+            coefficient = getPromotionCoefficient(previousDate, previousValue, startPromotionValue, startPromotionDate, stepOfPromotion, adjustedTime);
+            double finalPromotionValue = getPromotionValues(startPromotionDate, startPromotionValue, desiredValue, targetDate, stepOfPromotion, coefficient, adjustedTime).getLast().getPromotionValue();
+            if (finalPromotionValue > desiredValue)
+                coefficient = adjustPromotionCoefficient(startPromotionDate, startPromotionValue, desiredValue, targetDate, finalPromotionValue, stepOfPromotion, coefficient, adjustedTime);
+        }
         LinkedList<UniversityPromotionModel> universityPromotionData = getPromotionValues(startPromotionDate, startPromotionValue, desiredValue, targetDate, stepOfPromotion, coefficient, adjustedTime);
         this.finalPromotionCoefficient = Double.parseDouble(decimalFormat.format(coefficient));
         return universityPromotionData;
@@ -178,7 +182,6 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
     @Override
     public double getPromotionCoefficient(double startDate, double startValue, double desiredValue, double finishDate, double stepOfPromotion, double adjustedTime) {
         if (startValue == desiredValue) {
-            System.out.println(0.5);
             return 0.5;
         }
 
@@ -222,8 +225,41 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
         return getPromotionValues(startDate, startValue, desiredValue, finishDate, stepOfPromotion, 1, adjustedTime).getLast().getPromotionValue();
     }
 
-    private boolean getIsPromotionAscendant(double startDate, double startValue, double desiredValue, double finishDate, double stepOfPromotion, double adjustedTime) {
+    @Override
+    public boolean getIsPromotionAscendant(double startDate, double startValue, double desiredValue, double finishDate, double stepOfPromotion, double adjustedTime) {
         double rightEdge =  getRightEdge(startDate, startValue, desiredValue, finishDate, stepOfPromotion, adjustedTime);
         return getPromotionValues(startDate, startValue, desiredValue, finishDate, stepOfPromotion, 0.05, adjustedTime).getLast().getPromotionValue() < rightEdge;
+    }
+
+    @Override
+    public boolean isAutoCalculatedPromotion(Double coefficient) {
+        boolean autoCalculatedPromotion = true;
+        if (coefficient != null)
+            autoCalculatedPromotion = false;
+        return autoCalculatedPromotion;
+    }
+
+    @Override
+    @Transactional
+    public double getAutoCalculatedPromotionCoefficient(String universityName, String promotionCriterion, double startDate, double targetDate, double promotionStep) {
+        int universityId = universityPromotionDao.getUniversityIdByUniversityName(universityName);
+        int criterionId = universityPromotionDao.getCriterionIdByCriterionName(promotionCriterion);
+        return universityPromotionDao.getAutocalculatedPromotionCoefficient(universityId, criterionId, startDate, targetDate, promotionStep);
+    }
+
+    @Override
+    @Transactional
+    public void deletePromotionDataByUniIAndCriterion(String universityName, String promotionCriterion) {
+        int universityId = universityPromotionDao.getUniversityIdByUniversityName(universityName);
+        int criterionId = universityPromotionDao.getCriterionIdByCriterionName(promotionCriterion);
+        universityPromotionDao.deletePromotionDataByIds(universityId, criterionId);
+    }
+
+    public double getFinalPromotionCoefficient() {
+        return finalPromotionCoefficient;
+    }
+
+    public void setFinalPromotionCoefficient(double finalPromotionCoefficient) {
+        this.finalPromotionCoefficient = finalPromotionCoefficient;
     }
 }

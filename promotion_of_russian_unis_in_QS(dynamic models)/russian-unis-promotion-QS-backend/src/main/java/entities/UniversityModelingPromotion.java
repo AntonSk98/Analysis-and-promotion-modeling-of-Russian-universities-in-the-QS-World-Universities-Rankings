@@ -12,6 +12,8 @@ public class UniversityModelingPromotion {
     private LocalDateTime calculationDate;
     @Column(name = "promotion_coefficient")
     private double promotionCoefficient;
+    @Column(name = "auto_calculated_coefficient")
+    private boolean autoCalculatedPromotion;
     @Column(name = "start_date")
     private double startDate;
     @Column(name = "start_value")
@@ -107,5 +109,13 @@ public class UniversityModelingPromotion {
 
     public void setRussianUniversitiesInQS(RussianUniversitiesInQS russianUniversitiesInQS) {
         this.russianUniversitiesInQS = russianUniversitiesInQS;
+    }
+
+    public boolean isAutoCalculatedPromotion() {
+        return autoCalculatedPromotion;
+    }
+
+    public void setAutoCalculatedPromotion(boolean autoCalculatedPromotion) {
+        this.autoCalculatedPromotion = autoCalculatedPromotion;
     }
 }

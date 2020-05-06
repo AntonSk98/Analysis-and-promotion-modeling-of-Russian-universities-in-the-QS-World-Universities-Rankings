@@ -48,11 +48,12 @@ public class UniversityPromotionDaoImpl implements UniversityPromotionDao {
     }
 
     @Override
-    public void savePromotionData(LocalDateTime currentDate, double initialValue, double promotionValue, double promotionCoefficient, int criterionId, int universityId, double startDate, double targetDate, double promotionStep) {
+    public void savePromotionData(LocalDateTime currentDate, double initialValue, double promotionValue, double promotionCoefficient, int criterionId, int universityId, double startDate, double targetDate, double promotionStep, boolean autoCalculatedPromotion) {
         Session currentSession = sessionFactory.getCurrentSession();
         UniversityModelingPromotion promotionDate = new UniversityModelingPromotion();
         promotionDate.setCalculationDate(currentDate);
         promotionDate.setPromotionCoefficient(promotionCoefficient);
+        promotionDate.setAutoCalculatedPromotion(autoCalculatedPromotion);
         promotionDate.setStartDate(startDate);
         promotionDate.setStartValue(initialValue);
         promotionDate.setTargetDate(targetDate);
@@ -75,5 +76,28 @@ public class UniversityPromotionDaoImpl implements UniversityPromotionDao {
         return sessionFactory.getCurrentSession().createQuery(
                 "from criteria_table_in_QS where id =:criterion_id", CriteriaTableInQS.class)
                 .setParameter("criterion_id", criterionId).list().get(0);
+    }
+
+    @Override
+    public double getAutocalculatedPromotionCoefficient(int universityId, int criterionId, double startDate, double targetDate, double promotionStep) {
+        return sessionFactory.getCurrentSession().createQuery(
+                "select promotionCoefficient from university_modeling_promotion where russianUniversitiesInQS.id =:universityId and criteriaTable.id =:criterionId and autoCalculatedPromotion = true and startDate =:startDate and targetDate =:targetDate and promotionStep =:promotionStep", Double.class
+        )
+                .setParameter("universityId", universityId)
+                .setParameter("criterionId", criterionId)
+                .setParameter("startDate", startDate)
+                .setParameter("targetDate", targetDate)
+                .setParameter("promotionStep", promotionStep)
+                .list().get(0);
+    }
+
+    @Override
+    public void deletePromotionDataByIds(int universityId, int criterionId) {
+        sessionFactory.getCurrentSession().createQuery(
+                "delete from university_modeling_promotion where russianUniversitiesInQS.id =:universityId and criteriaTable.id =:criterionId"
+        )
+                .setParameter("universityId", universityId)
+                .setParameter("criterionId", criterionId)
+                .executeUpdate();
     }
 }
