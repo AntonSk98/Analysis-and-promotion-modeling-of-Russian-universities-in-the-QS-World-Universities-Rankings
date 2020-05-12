@@ -12,6 +12,9 @@ import {faArrowCircleRight} from '@fortawesome/free-solid-svg-icons';
 import {UniversityClassificationModalComponent} from '../university-classification-modal/university-classification-modal.component';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CriteriaQS} from '../models/criteriaQS';
+import {GeneralInformationService} from './service/general-information.service';
+import {UniversityCriterion} from '../models/universityCriterion';
+import {UniversityClassification} from '../models/universityClassification';
 
 @Component({
   selector: 'app-university-general-information',
@@ -40,9 +43,12 @@ import {CriteriaQS} from '../models/criteriaQS';
 export class UniversityGeneralInformationComponent implements OnInit {
 
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private generalInformationService: GeneralInformationService
   ) { }
+
   @ViewChild(UniversityClassificationModalComponent) modal: UniversityClassificationModalComponent;
+
   exitArrow = faArrowCircleLeft;
   academic = faSchool;
   employer = faMoneyCheckAlt;
@@ -53,12 +59,14 @@ export class UniversityGeneralInformationComponent implements OnInit {
   overall = faCalculator;
   left = faArrowCircleLeft;
   right = faArrowCircleRight;
+
   pageNumber = 0;
+
   universityCriteriaLoading = true;
   universityClassificationLoading = true;
 
-  tableInfo = [];
-  uniParams = [];
+  universityCriteriaInfo: UniversityCriterion[];
+  universityClassificationInfo: UniversityClassification[];
 
   universityId: string;
   universityName: string;
@@ -68,67 +76,20 @@ export class UniversityGeneralInformationComponent implements OnInit {
   ngOnInit(): void {
     this.universityId = this.route.snapshot.paramMap.get('id');
     this.universityName = this.route.snapshot.paramMap.get('university');
-    setTimeout(() => {
-      this.universityClassificationLoading = false;
-      this.uniParams = [
-        {
-          classification: 'Size Classification',
-          type: 'M'
-        },
-        {
-          classification: 'Subject Range Classification',
-          type: 'CO'
-        },
-        {
-          classification: 'Research Intensity Classification',
-          type: 'VH'
-        },
-        {
-          classification: 'Age Classification',
-          type: '5'
-        }
-      ];
-    }, 6000);
-    setTimeout(() => {
-      this.universityCriteriaLoading = false;
-      this.tableInfo = [
-        {
-          criterion: 'Academic reputation',
-          year2019: 62.8,
-          year2020: 60.4
-        },
-        {
-          criterion: 'Employer reputation',
-          year2019: 62.8,
-          year2020: 60.4
-        },
-        {
-          criterion: 'Faculty/Student Ratio',
-          year2019: 62.8,
-          year2020: 60.4
-        },
-        {
-          criterion: 'Citations per faculty',
-          year2019: 62.8,
-          year2020: 60.4
-        },
-        {
-          criterion: 'International faculty ratio',
-          year2019: 62.8,
-          year2020: 60.4
-        },
-        {
-          criterion: 'International student ratio',
-          year2019: 62.8,
-          year2020: 60.4
-        },
-        {
-          criterion: 'Overall Score',
-          year2019: 62.8,
-          year2020: 60.4
-        }
-      ];
-    }, 3000);
+
+    this.generalInformationService.getUniversityClassificationInfo(Number(this.universityId)).subscribe((classifications: UniversityClassification[]) => {
+      setTimeout(() => {
+        this.universityClassificationInfo = classifications;
+        this.universityClassificationLoading = false;
+      }, 500)
+    });
+
+    this.generalInformationService.getUniversityCriteriaInfo(Number(this.universityId)).subscribe((criteria: UniversityCriterion[]) => {
+      setTimeout(() => {
+        this.universityCriteriaInfo = criteria;
+        this.universityCriteriaLoading = false;
+      }, 500);
+    });
   }
 
   toggleMenu() {

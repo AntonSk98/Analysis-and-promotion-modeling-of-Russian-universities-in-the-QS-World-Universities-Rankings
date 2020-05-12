@@ -1,31 +1,22 @@
 package models;
 
 public class ExportDataModel {
-    private int universityId;
-    private int criterionId;
-    private String path;
+    private String universityName;
+    private String criterionName;
 
-    public int getUniversityId() {
-        return universityId;
+    public String getUniversityName() {
+        return universityName;
     }
 
-    public void setUniversityId(int universityId) {
-        this.universityId = universityId;
+    public void setUniversityName(String universityName) {
+        this.universityName = universityName;
     }
 
-    public int getCriterionId() {
-        return criterionId;
+    public String getCriterionName() {
+        return criterionName;
     }
 
-    public void setCriterionId(int criterionId) {
-        this.criterionId = criterionId;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
+    public void setCriterionName(String criterionName) {
+        this.criterionName = criterionName;
     }
 }

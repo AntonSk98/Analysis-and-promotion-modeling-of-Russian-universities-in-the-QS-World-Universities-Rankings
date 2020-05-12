@@ -1,6 +1,7 @@
 package services.universityPromotion;
 
 import dao.universityPromotion.UniversityPromotionDao;
+import models.QsCriteriaInfo;
 import models.UniversityCriterionModel;
 import models.UniversityPromotionModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
     @Override
     @Transactional
     public List<UniversityPromotionModel> conductOverallPromotion(String universityName, double startDate, double targetDate, double promotionStep, Double coefficient) {
-        DecimalFormat decimalFormat = new DecimalFormat("0.0000");
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
         Map<String, List<UniversityPromotionModel>> universityPromotionByAllCritera = getMapOfUniversityPromotionByAllCriteria(universityName, startDate, targetDate, promotionStep, coefficient);
         LinkedList<UniversityPromotionModel> overallPromotion = new LinkedList<>();
         double academicReputation;
@@ -55,13 +56,14 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
         double internationalFacultyRatio;
         double internationalStudentRatio;
         double currentDate = startDate;
+        QsCriteriaInfo qsCriteriaInfo = new QsCriteriaInfo();
         for (int i = 0; i < ((targetDate-startDate)/promotionStep) + 1; i++) {
-            academicReputation = universityPromotionByAllCritera.get("Academic Reputation").get(i).getPromotionValue();
-            employerReputation = universityPromotionByAllCritera.get("Employer Reputation").get(i).getPromotionValue();
-            facultyStudentRatio = universityPromotionByAllCritera.get("Faculty&Student Ratio").get(i).getPromotionValue();
-            citationsPerFaculty = universityPromotionByAllCritera.get("Citations Per Faculty").get(i).getPromotionValue();
-            internationalFacultyRatio = universityPromotionByAllCritera.get("International Faculty Ratio").get(i).getPromotionValue();
-            internationalStudentRatio = universityPromotionByAllCritera.get("International Student Ratio").get(i).getPromotionValue();
+            academicReputation = universityPromotionByAllCritera.get(qsCriteriaInfo.getAcademicReputation()).get(i).getPromotionValue();
+            employerReputation = universityPromotionByAllCritera.get(qsCriteriaInfo.getEmployerReputation()).get(i).getPromotionValue();
+            facultyStudentRatio = universityPromotionByAllCritera.get(qsCriteriaInfo.getFacultyStudentRatio()).get(i).getPromotionValue();
+            citationsPerFaculty = universityPromotionByAllCritera.get(qsCriteriaInfo.getCitationsPerFaculty()).get(i).getPromotionValue();
+            internationalFacultyRatio = universityPromotionByAllCritera.get(qsCriteriaInfo.getInternationalFacultyRatio()).get(i).getPromotionValue();
+            internationalStudentRatio = universityPromotionByAllCritera.get(qsCriteriaInfo.getInternationalStudentRatio()).get(i).getPromotionValue();
             overallPromotion.add(new UniversityPromotionModel(
                     Double.parseDouble(decimalFormat.format(currentDate)),
                     Double.parseDouble(decimalFormat.format(calculateOverallScore(
@@ -79,7 +81,7 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
     @Override
     public void savePromotionData(int universityId, int criterionId, double initialValue, double promotionValue, double promotionCoefficient, double startDate, double targetDate, double promotionStep, boolean autoCalculatedPromotion) {
         LocalDateTime currentDate = LocalDateTime.now();
-        universityPromotionDao.savePromotionData(currentDate, initialValue, promotionValue, promotionCoefficient, criterionId, universityId, startDate, targetDate, promotionStep, autoCalculatedPromotion);
+        universityPromotionDao.saveOrUpdatePromotionData(currentDate, initialValue, promotionValue, promotionCoefficient, criterionId, universityId, startDate, targetDate, promotionStep, autoCalculatedPromotion);
     }
 
     @Override
@@ -161,7 +163,8 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
 
     @Override
     public LinkedList<UniversityPromotionModel> getPromotionValues(double startDate, double startValue, double desiredValue, double finishDate, double stepOfPromotion, double promotionCoefficient, double adjustedTime) {
-        DecimalFormat decimalFormat = new DecimalFormat("0.0000");
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        DecimalFormat decimalFormatForDate = new DecimalFormat("0.000");
         double currentValue = startValue;
         double currentDate = startDate;
         double shortfallValue;
@@ -174,7 +177,9 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
                 continue;
             else
                 currentValue += (Math.pow( Math.pow(shortfallValue, 2) * currentValue / desiredValue, promotionCoefficient/adjustedTime)) * stepOfPromotion;
-            universityPromotionInfo.add(new UniversityPromotionModel(Double.parseDouble(decimalFormat.format(currentDate)), Double.parseDouble(decimalFormat.format(currentValue))));
+            if (currentValue > 100)
+                currentValue = 100;
+            universityPromotionInfo.add(new UniversityPromotionModel(Double.parseDouble(decimalFormatForDate.format(currentDate)), Double.parseDouble(decimalFormat.format(currentValue))));
         }
         return universityPromotionInfo;
     }
@@ -261,13 +266,5 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
         int universityId = universityPromotionDao.getUniversityIdByUniversityName(universityName);
         int criterionId = universityPromotionDao.getCriterionIdByCriterionName(promotionCriterion);
         return universityPromotionDao.getNumberOfUniversityPromotionLaunches(universityId, criterionId);
-    }
-
-    public double getFinalPromotionCoefficient() {
-        return finalPromotionCoefficient;
-    }
-
-    public void setFinalPromotionCoefficient(double finalPromotionCoefficient) {
-        this.finalPromotionCoefficient = finalPromotionCoefficient;
     }
 }

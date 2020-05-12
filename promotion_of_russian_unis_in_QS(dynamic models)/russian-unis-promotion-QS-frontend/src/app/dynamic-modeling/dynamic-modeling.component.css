@@ -4,7 +4,7 @@
 }
 .title {
   color: #F4B300;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: bold;
 }
 
@@ -18,9 +18,15 @@
   border: none;
 }
 
-.action-button:hover {
+.action-button:hover, .calculate-promotion-button:hover {
   background-color: #DC9D00;
   transition: all 0.4s ease 0s;
+}
+
+
+.list-button {
+  width: 5.5rem;
+  height: 1.65rem;
 }
 
 .coefficient-button {
@@ -49,13 +55,18 @@
   font-weight: bold;
 }
 
+.modeling-information-font {
+  line-height: 1.3rem;
+  font-size: 1.2rem;
+}
+
 
 .qs-color {
   color: #F4B300;
 }
 
-.w-38 {
-  width: 38% !important;
+.w-55 {
+  width: 60% !important;
 }
 
 .w-62 {
@@ -74,8 +85,8 @@ tr {
   line-height: 0.8rem;
 }
 
-.line-chart {
-  font-size: 1.8rem;
+.bigger-font {
+  font-size: 1.5rem;
 }
 
 .k-input {
@@ -102,6 +113,11 @@ ngb-alert::ng-deep button {
   outline: none !important;
 }
 
+.dropdown-item:active {
+  background: #F4B300 !important;
+  outline: #6c757d !important;
+}
+
 .calculation {
   opacity: 0.9;
   background-color: #F4B300;
@@ -125,6 +141,40 @@ ngb-alert::ng-deep button {
   animation-timing-function: ease-in;
   border-radius: 999px;
 }
+
+.disable-advanced-mode {
+  background-color: #EAEFF0;
+  border: #D9DDDC 1px solid;
+  opacity: 0.4;
+  border-radius: 0.4rem;
+}
+
+.disabled-button:hover, .disabled-exporting-button:hover {
+  background-color: #F4B300 !important;
+  transition: none !important;
+}
+
+.disabled-exporting-button {
+  opacity: 0.4;
+}
+
+ngb-pagination::ng-deep .page-item.active .page-link {
+  background-color: #F4B300 !important;
+  border-color: #F4B300;
+}
+
+ngb-pagination::ng-deep .page-link {
+  color: #F4B300;
+  font-weight: bold;
+}
+
+ngb-pagination::ng-deep .page-link:focus {
+  z-index: 0;
+  outline: none !important;
+  box-shadow: none;
+}
+
+
 
 /* set animation delay for each loading dot */
 .loadingDot--2 {

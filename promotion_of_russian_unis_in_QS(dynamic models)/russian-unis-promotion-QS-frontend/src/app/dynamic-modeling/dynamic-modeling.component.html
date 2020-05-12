@@ -1,7 +1,7 @@
-<div class="calculation" *ngIf="isLoading">
+<div *ngIf="isLoading" class="calculation">
   <div class="d-flex flex-column justify-content-center w-100 h-100 align-items-center">
     <div class="loading-msg d-flex align-items-end">
-      <div>Calculating promotion for {{universityPromotion.dynamicType}}</div>
+      <div>Calculating promotion for {{universityPromotion.criterionName}}</div>
       <div class="loadingDot loadingDot--1"></div>
       <div class="loadingDot loadingDot--2"></div>
       <div class="loadingDot loadingDot--3"></div>
@@ -12,106 +12,250 @@
 </div>
 <div class="container overflow-hidden">
   <div class="d-flex justify-content-between align-items-center">
-    <div class="header d-flex flex-column title">
-      <span>{{universityPromotion.dynamicType}} promotion</span>
-      <span>{{universityPromotion.university | uppercase}}</span>
+    <div class="d-flex flex-column title">
+      <span>{{universityPromotion.criterionName}} promotion</span>
+      <span>{{universityPromotion.university}}</span>
     </div>
-    <div class="">
-      <button [routerLink]="['/university-general-information/', universityPromotion.id, universityPromotion.university]"
-              class="action-button">Back<fa-icon [icon]="exitArrow" class="ml-1"></fa-icon></button>
+    <div class="go-back">
+      <button
+        [routerLink]="['/university-general-information/', universityPromotion.id, universityPromotion.university]"
+        class="action-button">Back
+        <fa-icon [icon]="exitArrow" class="ml-1"></fa-icon>
+      </button>
     </div>
   </div>
   <hr class="header-line m-0 mb-2">
   <div class="d-flex justify-content-between mb-4">
-    <div class="first-base-model w-38">
-      <div class="model-title qs-color">Basic dynamic model for</div>
-      <div class="model-title qs-color mb-2">{{universityPromotion.university}} promotion</div>
-      <img src="./assets/dynamic models/first base dynamic model.PNG" class="basic-dynamic-model">
+    <div class="first-base-model w-55">
+      <div class="qs-color model-title bigger-font">Basic dynamic model</div>
+      <img *ngIf="universityPromotion.criterionName !== criteriaQs.overallScore"
+           class="basic-dynamic-model mt-2 mb-2 w-100" src="./assets/dynamic models/first base dynamic model.PNG">
+      <img *ngIf="universityPromotion.criterionName === criteriaQs.overallScore"
+           class="basic-dynamic-model mt-2 mb-2 w-100" src="./assets/dynamic models/overall score dynamic mode.PNG">
       <hr class="header-line">
       <div class="promotion-table">
-        <div class="model-title qs-color">{{universityPromotion.dynamicType}} promotion - Table information</div>
-        <table class="table table-bordered table-striped m-0 mt-2">
+        <div class="model-title qs-color">{{universityPromotion.criterionName}} promotion - Table information</div>
+        <table class="table table-bordered table-striped m-0 mt-2 mb-1">
           <thead>
           <tr class="text-center">
-            <th scope="col" class="qs-background-color text-white text-left w-25">#</th>
-            <th scope="col" class="qs-background-color text-white text-left w-25">Time(Year)</th>
-            <th scope="col" class="qs-background-color text-white text-left">Value</th>
+            <th class="qs-background-color text-white text-left w-25" scope="col">#</th>
+            <th class="qs-background-color text-white text-left w-25" scope="col">Time(Year)</th>
+            <th class="qs-background-color text-white text-left" scope="col">Value</th>
           </tr>
           </thead>
-          <tbody>
-          <tr *ngFor="let row of tableData; index as i">
-            <td scope="row" class="font-weight-bold text-left">{{ i + 1 }}</td>
+          <tbody *ngIf="!isLoading">
+          <tr *ngFor="let row of promotionDataSlice; index as i">
+            <td class="font-weight-bold text-left" scope="row">{{ i + 1 }}</td>
             <td class="text-left">
-              {{ row.date }}
+              {{ row.year }}
             </td>
             <td class="text-left">
-              {{ row.value }} <span class="small">out of</span> 100
+              {{ row.promotionValue }} <span class="small">out of</span> 100
             </td>
           </tr>
           </tbody>
         </table>
+        <ngb-pagination *ngIf="!isLoading" [(page)]="tableParams.page"
+                        [collectionSize]="tableParams.collectionSize" [pageSize]="tableParams.pageSize">
+        </ngb-pagination>
       </div>
     </div>
-    <div class="w-100 ml-5">
-      <div class="qs-color model-title line-chart">Line chart promotion</div>
-      <canvas baseChart
-              [datasets]="test.lineChartData"
-              [labels]="test.lineChartLabels"
-              [colors]="test.lineChartColors"
+    <div class="w-100 ml-4">
+      <div class="qs-color model-title bigger-font">Chart promotion</div>
+      <canvas [chartType]="'line'"
+              [colors]="lineChart.lineChartColors"
+              [datasets]="lineChart.lineChartData"
+              [labels]="lineChart.lineChartLabels"
               [legend]="false"
-              [chartType]="'line'">
+              baseChart>
       </canvas>
       <hr class="header-line">
-      <div class="modeling-information" *ngIf="!isLoading">
-        <div class="qs-color model-title line-chart">Dynamic modeling information</div>
-        <div class="modeling-body">
-          <div class="d-flex align-items-baseline">
-            <div class="d-flex justify-content-start align-items-baseline">
-              <strong>
-                Most efficient promotion coefficient for
-                {{universityPromotion.dynamicType}}:
-              </strong>
-              <input class="form-control k-input ml-2"
-                     *ngIf="!coefficientEdited" type="number"
-                     disabled value="{{userPromotionCoefficient}}" step="0.01" max="1" min="0">
-              <input class="form-control k-input ml-2"
-                     *ngIf="coefficientEdited" type="number"
-                     value="{{userPromotionCoefficient}}" step="0.01" max="1" min="0"
-                     [(ngModel)]="userPromotionCoefficient">
+      <div *ngIf="!isLoading" class="modeling-information">
+        <div class="qs-color model-title bigger-font mb-1">Promotion modeling information:</div>
+        <div>
+          <div *ngIf="universityPromotion.criterionName !== criteriaQs.overallScore"
+               class="modeling-information-font ml-3">Most productive promotion coefficient:
+            <strong>
+              {{promotionCoefficient}}
+            </strong>
+          </div>
+          <div class="modeling-information-font ml-3">Promotion value by
+            <strong>
+              {{promotionData[promotionData.length - 1].year}}
+            </strong>
+            year is
+            <strong>
+              {{promotionData[promotionData.length - 1].promotionValue}}
+            </strong>
+          </div>
+          <div class="modeling-information-font ml-3">
+            Number of dynamic models by {{universityPromotion.criterionName}} criterion is
+            <strong>
+              {{numberOfLaunches}}
+            </strong>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="!isLoading" class="header-line mt-3">
+      <div *ngIf="!isLoading" class="modeling-information">
+        <div class="qs-color model-title bigger-font">
+          Control panel:
+        </div>
+        <div class="mb-2" style="margin-top: -0.7rem">
+          Here you can create your own promotion model by adjusting the parameters below!
+        </div>
+        <div class="modeling-information-font d-flex justify-content-start align-items-center ml-3">
+          <div class="mr-2">
+            Target promotion date:
+          </div>
+          <div>
+            <div class="d-inline-block" ngbDropdown>
+              <button class="action-button list-button" id="dropdownBasic1" ngbDropdownToggle>
+                {{controlPanelData.promotionDateButtonSelected}}
+              </button>
+              <div aria-labelledby="dropdownBasic1" ngbDropdownMenu>
+                <button (click)="controlPanelData.setPromotionDateButtonSelected(date)"
+                        *ngFor="let date of controlPanelData.targetDates"
+                        ngbDropdownItem>
+                  {{date}}
+                </button>
+              </div>
             </div>
-            <button *ngIf="!coefficientEdited"
-                    class="action-button coefficient-button ml-2"
-                    placement="left-bottom" [ngbTooltip]="tooltipMsg" (click)="onClickEdited()">
-              <fa-icon [icon]="edit" class="ml-1"></fa-icon>
-            </button>
-            <button *ngIf="coefficientEdited"
-                    class="action-button coefficient-button ml-2"
-                    (click)="onClickRecalculate()">
-              <fa-icon [icon]="apply" class="ml-1"></fa-icon>
-            </button>
           </div>
-          <div class="font-weight-bold">
-            {{universityPromotion.dynamicType}} value by
-            {{tableData[tableData.length-1]?.date}} year: {{tableData[tableData.length-1]?.value}}
+
+        </div>
+        <div class="modeling-information-font d-flex justify-content-start align-items-center mt-2 ml-3">
+          <div class="mr-2">
+            Promotion step:
           </div>
-          <div *ngIf="(userPromotionCoefficient > promotionCoefficient || userPromotionCoefficient < promotionCoefficient)">
-            <ngb-alert *ngIf="showWarningMessage" [type]="'warning'" class="warning-message" (close)="closeWarningMessage()">
-              <div class="qs-color text-center font-weight-bold">{{'warning!' | uppercase}}</div>
-              <div *ngIf="userPromotionCoefficient < promotionCoefficient"
-                   class="d-flex flex-column font-weight-bold warning-message-text">
-                Resources might be allocated inefficiently!
-                It's highly recommended to use the automatically calculated coefficient
-                for the most effective promotion modeling!
+          <div>
+            <div class="d-inline-block" ngbDropdown>
+              <button class="action-button list-button" id="dropdownBasic2" ngbDropdownToggle>
+                {{controlPanelData.promotionStepButtonSelected}}
+              </button>
+              <div aria-labelledby="dropdownBasic2" ngbDropdownMenu>
+                <button (click)="controlPanelData.setPromotionStepButtonSelected(value)"
+                        *ngFor="let value of controlPanelData.promotionSteps"
+                        ngbDropdownItem>
+                  {{value}}
+                </button>
               </div>
-              <div *ngIf="userPromotionCoefficient > promotionCoefficient"
-                   class="d-flex flex-column font-weight-bold warning-message-text">
-                Too many resources might used to promote this criterion! To make sure that the promotion
-                is reliable and accurate, please, use the automatically calculated coefficient!
-              </div>
-            </ngb-alert>
+            </div>
           </div>
+        </div>
+      </div>
+      <div *ngIf="(!isLoading && universityPromotion.criterionName !== criteriaQs.overallScore)" class="modeling-information mt-2" disabled=true>
+        <div class="d-flex justify-content-start align-items-baseline">
+          <div class="qs-color model-title bigger-font mr-2">
+            Advanced mode:
+          </div>
+          <div>
+            <input (ngModelChange)="resetPromotionCoefficient()" [(ngModel)]="isAdvancedModeActive"
+                   style="cursor: pointer;" type="checkbox">
+          </div>
+        </div>
+        <div *ngIf="isAdvancedModeActive" style="margin-top: -0.7rem">
+          Here you can change the coefficient of the dynamic promotion
+        </div>
+        <div *ngIf="!isAdvancedModeActive" style="margin-top: -0.7rem">
+          To change the dynamic promotion coefficient, enable this sector! <strong>(it's optional)</strong>
+        </div>
+        <div [ngClass]="!isAdvancedModeActive ? 'disable-advanced-mode' : ''">
+          <div class="ml-3">
+            <strong>Important note 1...</strong>
+            <div style="margin-top: -0.5rem">
+              The coefficient can be changed in the range of -0.05 to +0.05 from the auto-calculated value.
+            </div>
+          </div>
+          <div class="mb-2 ml-3">
+            <strong>Important note 2...</strong>
+            <div style="margin-top: -0.5rem">
+              Not understanding the basic dynamic model might lead to incorrect result.
+            </div>
+          </div>
+          <div class="modeling-information-font d-flex justify-content-start align-items-center mt-2 ml-3 pb-2">
+            <div class="mr-2">
+              Promotion coefficient:
+            </div>
+            <div>
+              <div class="d-inline-block" ngbDropdown>
+                <button [disabled]="!isAdvancedModeActive"
+                        [ngClass]="!isAdvancedModeActive ? 'disabled-button' : ''"
+                        class="action-button list-button" id="dropdownBasic3"
+                        ngbDropdownToggle>
+                  {{controlPanelData.promotionCoefficient}}
+                </button>
+                <div aria-labelledby="dropdownBasic3" ngbDropdownMenu>
+                  <button (click)="controlPanelData.setPromotionCoefficient(coefficient)"
+                          *ngFor="let coefficient of controlPanelData.promotionCoefficientList"
+                          ngbDropdownItem>
+                    {{coefficient}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr *ngIf="!isLoading" class="header-line mt-2 mb-2 w-50">
+      <button (click)="runCustomizedDynamicModeling()" *ngIf="!isLoading" class="action-button">
+        Launch your customized model:
+        <fa-icon [icon]="calculate"></fa-icon>
+      </button>
+      <hr *ngIf="!isLoading" class="header-line mt-3">
+      <div *ngIf="!isLoading" class="modeling-information">
+        <div class="qs-color model-title bigger-font">
+          Export data:
+        </div>
+        <div class="mb-2" style="margin-top: -0.7rem">
+          Here you can export data regarding promotion modeling!
+        </div>
+        <div class="modeling-information-font d-flex justify-content-start align-items-center ml-3">
+          <div class="mr-2">
+            Export data into HTML:
+          </div>
+          <button (click)="exportDataIntoHtmlFile()" [disabled]="isHTMLExporting"
+                  [ngClass]="isHTMLExporting ? 'disabled-exporting-button' : ''"
+                  class="action-button list-button">
+            .html
+            <fa-icon [icon]="documentHtml" class="ml-1"></fa-icon>
+          </button>
+        </div>
+        <div class="modeling-information-font d-flex justify-content-start align-items-center ml-3 mt-2">
+          <div class="mr-2">
+            Export data into Excel file:
+          </div>
+          <button (click)="exportDataIntoExcelFile()" [disabled]="isExcelExporting"
+                  [ngClass]="isExcelExporting ? 'disabled-exporting-button' : ''"
+                  class="action-button list-button">
+            .xls
+            <fa-icon [icon]="documentExcel" class="ml-1"></fa-icon>
+          </button>
+        </div>
+      </div>
+      <hr *ngIf="!isLoading" class="header-line mt-3">
+      <div *ngIf="!isLoading" class="modeling-information mb-3">
+        <div class="qs-color model-title bigger-font">
+          Delete promotion data:
+        </div>
+        <div class="mb-2" style="margin-top: -0.7rem">
+          Here you can delete all your dynamic models by {{universityPromotion.criterionName}} criterion!
+        </div>
+        <div class="modeling-information-font d-flex justify-content-start align-items-center ml-3">
+          <div class="mr-2">
+            Delete dynamic models:
+          </div>
+          <button (click)="deletePromotionData()" [disabled]="isPromotionDeleting"
+                  [ngClass]="isPromotionDeleting ? 'disabled-exporting-button' : ''"
+                  class="action-button list-button">
+            clear
+            <fa-icon [icon]="clear" class="ml-1"></fa-icon>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<app-notification-utils></app-notification-utils>

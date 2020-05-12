@@ -15,7 +15,7 @@ public interface UniversityPromotionDao {
 
     List<String> getQSCriteriaList();
 
-    void savePromotionData(LocalDateTime currentDate, double initialValue, double promotionValue, double promotionCoefficient, int criterionId, int universityId, double startDate, double targetDate, double promotionStep, boolean autoCalculatedPromotion);
+    void saveOrUpdatePromotionData(LocalDateTime currentDate, double initialValue, double promotionValue, double promotionCoefficient, int criterionId, int universityId, double startDate, double targetDate, double promotionStep, boolean autoCalculatedPromotion);
 
     RussianUniversitiesInQS getRussianUniversityById(int universityId);
 

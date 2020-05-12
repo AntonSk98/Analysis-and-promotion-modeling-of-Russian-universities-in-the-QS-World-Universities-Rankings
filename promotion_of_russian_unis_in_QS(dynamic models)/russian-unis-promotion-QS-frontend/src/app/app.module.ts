@@ -10,8 +10,11 @@ import { UniversityClassificationModalComponent } from './university-classificat
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { DynamicModelingComponent } from './dynamic-modeling/dynamic-modeling.component';
 import {ChartsModule} from 'ng2-charts';
-import {NgbAlertModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAlertModule, NgbDropdownModule, NgbModule, NgbPaginationModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import { NotificationUtilsComponent } from './notification-utils/notification-utils.component';
+import {SimpleNotificationsModule} from 'angular2-notifications';
 
 @NgModule({
   declarations: [
@@ -20,18 +23,23 @@ import {FormsModule} from '@angular/forms';
     UniversityGeneralInformationComponent,
     PageNotFoundComponent,
     UniversityClassificationModalComponent,
-    DynamicModelingComponent
+    DynamicModelingComponent,
+    NotificationUtilsComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FontAwesomeModule,
-    BrowserAnimationsModule,
-    ChartsModule,
-    NgbTooltipModule,
-    FormsModule,
-    NgbAlertModule
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        FontAwesomeModule,
+        BrowserAnimationsModule,
+        ChartsModule,
+        NgbTooltipModule,
+        FormsModule,
+        NgbAlertModule,
+        NgbDropdownModule,
+        NgbPaginationModule,
+        SimpleNotificationsModule.forRoot()
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

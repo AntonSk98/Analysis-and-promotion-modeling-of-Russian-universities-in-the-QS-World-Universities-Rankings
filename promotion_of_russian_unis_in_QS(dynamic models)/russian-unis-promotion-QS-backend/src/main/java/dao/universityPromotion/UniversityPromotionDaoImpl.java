@@ -48,20 +48,36 @@ public class UniversityPromotionDaoImpl implements UniversityPromotionDao {
     }
 
     @Override
-    public void savePromotionData(LocalDateTime currentDate, double initialValue, double promotionValue, double promotionCoefficient, int criterionId, int universityId, double startDate, double targetDate, double promotionStep, boolean autoCalculatedPromotion) {
+    public void saveOrUpdatePromotionData(LocalDateTime currentDate, double initialValue, double promotionValue, double promotionCoefficient, int criterionId, int universityId, double startDate, double targetDate, double promotionStep, boolean autoCalculatedPromotion) {
         Session currentSession = sessionFactory.getCurrentSession();
-        UniversityModelingPromotion promotionDate = new UniversityModelingPromotion();
-        promotionDate.setCalculationDate(currentDate);
-        promotionDate.setPromotionCoefficient(promotionCoefficient);
-        promotionDate.setAutoCalculatedPromotion(autoCalculatedPromotion);
-        promotionDate.setStartDate(startDate);
-        promotionDate.setStartValue(initialValue);
-        promotionDate.setTargetDate(targetDate);
-        promotionDate.setPromotionValue(promotionValue);
-        promotionDate.setRussianUniversitiesInQS(getRussianUniversityById(universityId));
-        promotionDate.setCriteriaTable(getCriterionById(criterionId));
-        promotionDate.setPromotionStep(promotionStep);
-        currentSession.save(promotionDate);
+        List<UniversityModelingPromotion> universityModelingPromotions = sessionFactory.getCurrentSession()
+                .createQuery("from university_modeling_promotion where startValue =:initialValue and promotionValue =:promotionValue and promotionCoefficient =:promotionCoefficient and criteriaTable.id =:criterionId and russianUniversitiesInQS.id =:universityId and startDate =:startDate and targetDate =:targetDate and promotionStep =:promotionStep and autoCalculatedPromotion =:autoCalculatedPromotion", UniversityModelingPromotion.class)
+                .setParameter("initialValue", initialValue)
+                .setParameter("promotionValue", promotionValue)
+                .setParameter("promotionCoefficient", promotionCoefficient)
+                .setParameter("criterionId", criterionId)
+                .setParameter("universityId", universityId)
+                .setParameter("startDate", startDate)
+                .setParameter("targetDate", targetDate)
+                .setParameter("promotionStep", promotionStep)
+                .setParameter("autoCalculatedPromotion",autoCalculatedPromotion).list();
+        UniversityModelingPromotion promotionData = new UniversityModelingPromotion();
+        promotionData.setCalculationDate(currentDate);
+        promotionData.setPromotionCoefficient(promotionCoefficient);
+        promotionData.setAutoCalculatedPromotion(autoCalculatedPromotion);
+        promotionData.setStartDate(startDate);
+        promotionData.setStartValue(initialValue);
+        promotionData.setTargetDate(targetDate);
+        promotionData.setPromotionValue(promotionValue);
+        promotionData.setRussianUniversitiesInQS(getRussianUniversityById(universityId));
+        promotionData.setCriteriaTable(getCriterionById(criterionId));
+        promotionData.setPromotionStep(promotionStep);
+        if(universityModelingPromotions.size() == 0) {
+            currentSession.save(promotionData);
+        } else {
+            universityModelingPromotions.get(0).setCalculationDate(currentDate);
+            currentSession.flush();
+        }
     }
 
     @Override

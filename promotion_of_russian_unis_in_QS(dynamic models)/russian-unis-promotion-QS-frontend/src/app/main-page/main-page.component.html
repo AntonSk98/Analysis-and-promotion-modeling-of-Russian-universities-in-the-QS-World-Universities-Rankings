@@ -26,19 +26,19 @@
             <div class="spinner-border qs-color"></div>
           </td>
         </tr>
-        <tr *ngFor="let university of universities; index as i">
+        <tr *ngFor="let university of topRussianUniversitiesInQS; index as i">
           <td scope="row" class="font-weight-bold">{{ i + 1 }}</td>
           <td class="text-center">
-            {{ university.year2020 }}
+            {{ university.rank2020 }}
           </td>
           <td class="text-center">
-            {{ university.year2019 }}
+            {{ university.rank2019 }}
           </td>
           <td class="text-left">
-            {{ university.university }}
+            {{ university.institutionName }}
           </td>
           <td class="text-center">
-            <button [routerLink]="['/university-general-information/', university.id, university.university]"
+            <button [routerLink]="['/university-general-information/', university.id, university.institutionName]"
                     class="action-button">Overview<fa-icon [icon]="rightArrow" class="ml-1"></fa-icon></button>
           </td>
         </tr>

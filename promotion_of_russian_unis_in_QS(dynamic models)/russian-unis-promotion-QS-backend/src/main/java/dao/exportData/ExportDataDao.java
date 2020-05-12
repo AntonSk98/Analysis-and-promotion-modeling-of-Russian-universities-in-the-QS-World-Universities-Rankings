@@ -8,7 +8,7 @@ public interface ExportDataDao {
 
     List<UniversityModelingPromotion> getPromotionInfoByUniIdAndCriterionId(int universityId, int criterionId);
 
-    String getUniversityNameByUniversityId(int universityId);
+    int getUniversityIdByUniversityName(String universityName);
 
-    String getUniversityCriterionByCriterionId(int criterionId);
+    int getCriterionIdByUniversityCriterion(String criterionName);
 }

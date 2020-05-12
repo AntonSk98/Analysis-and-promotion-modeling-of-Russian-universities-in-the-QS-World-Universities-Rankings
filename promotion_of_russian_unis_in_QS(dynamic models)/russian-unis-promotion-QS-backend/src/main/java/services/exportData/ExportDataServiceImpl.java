@@ -2,7 +2,6 @@ package services.exportData;
 
 import dao.exportData.ExportDataDao;
 import entities.UniversityModelingPromotion;
-import j2html.tags.DomContent;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -30,12 +28,12 @@ public class ExportDataServiceImpl implements ExportDataService {
 
     @Override
     @Transactional
-    public void exportPromotionDataIntoExcelByUniIdAndCriterionId(int universityId, int criterionId, String path) {
+    public void exportPromotionDataIntoExcelByUniIdAndCriterionId(String universityName, String criterionName) {
+        int universityId = exportDataDao.getUniversityIdByUniversityName(universityName);
+        int criterionId = exportDataDao.getCriterionIdByUniversityCriterion(criterionName);
         List<UniversityModelingPromotion> universityPromotionData= exportDataDao.getPromotionInfoByUniIdAndCriterionId(universityId, criterionId);
-        String universityName = exportDataDao.getUniversityNameByUniversityId(universityId);
-        String criterionName = exportDataDao.getUniversityCriterionByCriterionId(criterionId);
         try {
-            exportPromotionDataIntoExcelFile(universityName, criterionName, path, universityPromotionData);
+            exportPromotionDataIntoExcelFile(universityName, criterionName, universityPromotionData);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,19 +41,19 @@ public class ExportDataServiceImpl implements ExportDataService {
 
     @Override
     @Transactional
-    public void exportPromotionDataIntoHtmlByUniIdAndCriterionId(int universityId, int criterionId, String path) {
+    public void exportPromotionDataIntoHtmlByUniIdAndCriterionId(String universityName, String criterionName) {
+        int universityId = exportDataDao.getUniversityIdByUniversityName(universityName);
+        int criterionId = exportDataDao.getCriterionIdByUniversityCriterion(criterionName);
         List<UniversityModelingPromotion> universityPromotionData= exportDataDao.getPromotionInfoByUniIdAndCriterionId(universityId, criterionId);
-        String universityName = exportDataDao.getUniversityNameByUniversityId(universityId);
-        String criterionName = exportDataDao.getUniversityCriterionByCriterionId(criterionId);
         try {
-            exportPromotionDataIntoHtmlFile(universityName, criterionName, path, universityPromotionData);
+            exportPromotionDataIntoHtmlFile(universityName, criterionName, universityPromotionData);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void exportPromotionDataIntoExcelFile(String universityName, String criterionName, String path, List<UniversityModelingPromotion> universityPromotionData) throws IOException {
+    public void exportPromotionDataIntoExcelFile(String universityName, String criterionName, List<UniversityModelingPromotion> universityPromotionData) throws IOException {
         int rowNumber = 0;
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet worksheet = workbook.createSheet(universityName + "promotion data");
@@ -146,7 +144,8 @@ public class ExportDataServiceImpl implements ExportDataService {
             cell = row.createCell(7, CellType.BOOLEAN);
             cell.setCellValue(universityPromotionRow.isAutoCalculatedPromotion());
         }
-
+        String path = System.getProperty("user.home") + "\\Downloads";
+        System.out.println(path);
         File file = new File(path+"\\"+universityName+"_promotion_by"+criterionName+".xls");
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
@@ -155,7 +154,7 @@ public class ExportDataServiceImpl implements ExportDataService {
     }
 
     @Override
-    public void exportPromotionDataIntoHtmlFile(String universityName, String criterionName, String path, List<UniversityModelingPromotion> universityPromotionData) throws IOException {
+    public void exportPromotionDataIntoHtmlFile(String universityName, String criterionName, List<UniversityModelingPromotion> universityPromotionData) throws IOException {
         String htmlDoc = html(
                 style(".qs-color {color: #F9B21E;}"),
                 style(".text-center {text-align: center;}"),
@@ -195,6 +194,8 @@ public class ExportDataServiceImpl implements ExportDataService {
                         div("This webpage was generated automatically!")
                 )
         ).render();
+        String path = System.getProperty("user.home") + "\\Downloads";
+        System.out.println(path);
         File newHtmlFile = new File(path+"\\"+universityName+"_promotion_by"+criterionName+".html");
         BufferedWriter writer = new BufferedWriter(new FileWriter(newHtmlFile));
         writer.write(htmlDoc);

@@ -84,16 +84,16 @@
             <div class="spinner-border qs-color"></div>
           </td>
         </tr>
-        <tr *ngFor="let row of tableInfo; index as i">
+        <tr *ngFor="let row of universityCriteriaInfo; index as i">
           <td scope="row" class="font-weight-bold text-center">{{ i + 1 }}</td>
           <td class="text-left">
-            {{ row.criterion}}
+            {{ row.criterionName}}
           </td>
           <td class="text-center">
-            {{ row.year2019 }} <span class="small">out of</span> 100
+            {{ row.rank2019 }} <span class="small">out of</span> 100
           </td>
           <td class="text-center">
-            {{ row.year2020 }} <span class="small">out of</span> 100
+            {{ row.rank2020 }} <span class="small">out of</span> 100
           </td>
         </tr>
         </tbody>
@@ -121,22 +121,22 @@
             <div class="spinner-border qs-color"></div>
           </td>
         </tr>
-        <tr *ngFor="let row of uniParams; index as i">
+        <tr *ngFor="let row of universityClassificationInfo; index as i">
           <td scope="row" class="font-weight-bold text-center">{{ i + 1 }}</td>
           <td class="text-left">
             <div class="d-flex justify-content-between align-items-end">
-              <div>{{ row.classification}}</div>
-              <div class="small more-info-classification" (click)="openModal(row.classification)">click to read more</div>
+              <div>{{ row.classificationName}}</div>
+              <div class="small more-info-classification" (click)="openModal(row.classificationName)">click to read more</div>
             </div>
           </td>
           <td class="text-center">
-            {{ row.type }}
+            {{ row.classificationType }}
           </td>
         </tr>
         </tbody>
       </table>
     </div>
-    <div class="mt-2 mb-4 qs-color font-weight-bold">
+    <div class="mt-1 qs-color font-weight-bold">
       QS
       <span *ngIf="pageNumber===0">Criteria</span>
       <span *ngIf="pageNumber===1">Classification</span>

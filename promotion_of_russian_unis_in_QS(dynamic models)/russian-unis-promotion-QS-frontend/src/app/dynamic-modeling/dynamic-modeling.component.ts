@@ -1,8 +1,12 @@
 import {Component, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {faArrowCircleLeft, faEdit, faCalculator} from '@fortawesome/free-solid-svg-icons';
+import {faArrowCircleLeft, faEdit, faCalculator, faFileExcel, faFileCsv, faFileDownload, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {ChartDataSets} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
+import {ModelingPromotionService} from './service/modeling-promotion.service';
+import {PromotionData} from '../models/promotionData';
+import {NotificationUtilsComponent} from '../notification-utils/notification-utils.component';
+import {CriteriaQS} from '../models/criteriaQS';
 
 
 @Component({
@@ -11,120 +15,224 @@ import {Color, Label} from 'ng2-charts';
   styleUrls: ['./dynamic-modeling.component.css']
 })
 export class DynamicModelingComponent implements OnInit {
+
+  @ViewChild(NotificationUtilsComponent) notifications: NotificationUtilsComponent;
+
   constructor(
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private modelingPromotionService: ModelingPromotionService
+  ) {
+  }
 
   universityPromotion = new UniversityPromotion();
   exitArrow = faArrowCircleLeft;
   edit = faEdit;
-  apply = faCalculator;
-  tableData: TableData[];
+  documentHtml = faFileDownload;
+  documentExcel = faFileExcel;
+  calculate = faCalculator;
+  clear = faTrash;
+  promotionData: PromotionData[];
   isLoading = true;
+  lineChart = new LineChart();
+  controlPanelData = new ControlPanelData();
+  tableParams = new TableParams();
+  criteriaQs = new CriteriaQS();
+
   promotionCoefficient: number;
-  userPromotionCoefficient: number;
-  test = new LineChart();
-  coefficientEdited = false;
-  showWarningMessage = true;
-  tooltipMsg = 'To calculate promotion manually, please click this button and set a promotion coefficient in the range of 0 to 1';
+  isAdvancedModeActive = false;
+  numberOfLaunches: number;
+  isHTMLExporting = false;
+  isExcelExporting = false;
+  isPromotionDeleting = false;
+
+
   ngOnInit(): void {
-    this.universityPromotion.id  = this.route.snapshot.paramMap.get('id');
+    this.getParams();
+    this.calculateDefaultPromotion();
+  }
+
+
+  get promotionDataSlice(): PromotionData[] {
+    return this.promotionData
+      .slice((this.tableParams.page - 1) * this.tableParams.pageSize,
+        (this.tableParams.page - 1) * this.tableParams.pageSize + this.tableParams.pageSize);
+  }
+
+
+  getParams() {
+    this.universityPromotion.id = this.route.snapshot.paramMap.get('id');
     this.universityPromotion.university = this.route.snapshot.paramMap.get('university');
-    this.universityPromotion.dynamicType = this.route.snapshot.paramMap.get('modelingType');
-    this.promotionCoefficient = 0.34;
-    this.userPromotionCoefficient = 0.34;
-    setTimeout(() => {
-      this.isLoading = false;
-      this.tableData = [
-        {
-          date: '2020',
-          value: 68.25
-        },
-        {
-          date: '2020.50',
-          value: 68.275
-        },
-        {
-          date: '2020.5',
-          value: 73.6
-        },
-        {
-          date: '2020.75',
-          value: 78.19
-        },
-        {
-          date: '2021',
-          value: 79
-        },
-        {
-          date: '2021.25',
-          value: 80.32
-        },
-        {
-          date: '2021.5',
-          value: 80.98
-        },
-        {
-          date: '2021.75',
-          value: 81.64
-        },
-        {
-          date: '2022',
-          value: 82.9
-        },
-        {
-          date: '2022.25',
-          value: 84.99
-        },
-        {
-          date: '2022.5',
-          value: 86.75
-        },
-        {
-          date: '2022.75',
-          value: 96.99
-        },
-        {
-          date: '2023',
-          value: 100
+    this.universityPromotion.criterionName = this.route.snapshot.paramMap.get('modelingType');
+  }
+
+  calculateDefaultPromotion() {
+    const uniName = this.universityPromotion.university;
+    const criterionName = this.universityPromotion.criterionName;
+    const startDate = 2020;
+    const targetDate = 2023;
+    const promotionStep = 0.125;
+    this.launchPromotion(uniName, criterionName, startDate, targetDate, promotionStep);
+  }
+
+  launchPromotion(uniName: string, criterionName: string, startDate: number, targetDate: number, promotionStep: number, promotionCoefficient?: number) {
+    this.modelingPromotionService.calculatePromotionData(uniName, criterionName, startDate, targetDate, promotionStep, promotionCoefficient)
+      .subscribe((promotionData: PromotionData[]) => {
+        if (!promotionCoefficient) {
+          this.modelingPromotionService.getPromotionCoefficient(uniName, criterionName, startDate, targetDate, promotionStep)
+            .subscribe((promotionCoefficient: number) => {
+              this.promotionCoefficient = promotionCoefficient;
+              this.controlPanelData.setPromotionCoefficient(promotionCoefficient);
+              this.controlPanelData.setPromotionCoefficientList(promotionCoefficient);
+            }, () => {
+              this.notifications.errorMessage();
+            });
         }
-      ];
-      this.test.lineChartData  = [
-        { data: this.tableData.map(value => value.value), label: `${this.universityPromotion.dynamicType} promotion` },
-      ];
-      this.test.lineChartLabels = this.tableData.map(value => value.date);
-    }, 5000);
+        this.modelingPromotionService.getNumberOfLaunches(uniName, criterionName)
+          .subscribe((launchesNumber: number) => {
+            setTimeout(() => {
+              this.numberOfLaunches = launchesNumber;
+              this.promotionData = promotionData;
+              this.tableParams.defineTablePaginationParams(1, 15, promotionData.length);
+              this.lineChart.lineChartData = this.lineChart.setLineChartData(this.filterDataForLineChart(promotionData), this.universityPromotion.criterionName);
+              this.lineChart.lineChartLabels = this.lineChart.setLineChartLabels(this.filterDataForLineChart(promotionData));
+              this.isLoading = false;
+              this.notifications.successMessage(
+                'Dynamic modeling',
+                'Promotion has been calculated'
+              );
+            }, 500);
+          }, () => {
+            this.notifications.errorMessage();
+          });
+      }, () => {
+        this.notifications.errorMessage();
+      });
   }
 
-  onClickEdited() {
-    this.coefficientEdited = !this.coefficientEdited;
+  exportDataIntoHtmlFile() {
+    this.isHTMLExporting = true;
+    this.modelingPromotionService.exportDataIntoHtmlFile(this.universityPromotion.university, this.universityPromotion.criterionName)
+      .subscribe(() => {
+        this.isHTMLExporting = false;
+        this.notifications.successMessage(
+          'Successful html export',
+          'The file is in Downloads'
+        );
+      }, () => {
+        this.isHTMLExporting = false;
+        this.notifications.errorMessage();
+      });
   }
 
-  onClickRecalculate() {
-    this.coefficientEdited = !this.coefficientEdited;
-    this.showWarningMessage = true;
-    console.log(this.userPromotionCoefficient);
+  exportDataIntoExcelFile() {
+    this.isExcelExporting = true;
+    this.modelingPromotionService.exportDataIntoExcelFile(this.universityPromotion.university, this.universityPromotion.criterionName)
+      .subscribe(() => {
+        this.isExcelExporting = false;
+        this.notifications.successMessage(
+          'Successful excel export',
+          'The file is in Downloads'
+        );
+      }, () => {
+        this.notifications.errorMessage();
+        this.isExcelExporting = false;
+      });
   }
 
-  closeWarningMessage() {
-    this.showWarningMessage = false;
+  deletePromotionData() {
+    this.isPromotionDeleting = true;
+    this.modelingPromotionService.deletePromotionData(this.universityPromotion.university, this.universityPromotion.criterionName)
+      .subscribe(() => {
+        this.notifications.successMessage(
+          'Bye-bye my models...',
+          'All models are deleted'
+        );
+        setTimeout(() => location.reload(), 5000);
+      }, () => {
+        this.notifications.errorMessage();
+      });
+  }
+
+  filterDataForLineChart(promotionData: PromotionData[]): PromotionData[] {
+    return promotionData.filter(value => {
+      if (value.year % 0.125 === 0) {
+        return value;
+      }
+    });
+  }
+
+  runCustomizedDynamicModeling() {
+    this.notifications.clearAll();
+    this.isLoading = true;
+    this.launchPromotion(
+      this.universityPromotion.university,
+      this.universityPromotion.criterionName,
+      2020,
+      this.controlPanelData.promotionDateButtonSelected,
+      this.controlPanelData.promotionStepButtonSelected,
+      this.promotionCoefficient === this.controlPanelData.promotionCoefficient ? null : this.controlPanelData.promotionCoefficient
+    );
+  }
+
+  resetPromotionCoefficient() {
+    this.controlPanelData.setPromotionCoefficient(this.promotionCoefficient);
   }
 }
 
 class UniversityPromotion {
   id: string;
   university: string;
-  dynamicType: string;
+  criterionName: string;
 }
 
-class TableData {
-  date: string;
-  value: number;
+class ControlPanelData {
+  promotionDateButtonSelected = 2023;
+  targetDates = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
+  promotionStepButtonSelected = 0.125;
+  promotionSteps = [0.0625, 0.125, 0.25, 0.5, 1];
+  promotionCoefficient: number;
+  promotionCoefficientList = [];
+
+  setPromotionCoefficientList(autoCalculatedCoefficient: number) {
+    this.promotionCoefficientList = [];
+    let minimalValue = autoCalculatedCoefficient - 0.05;
+    if (minimalValue < 0) {
+      minimalValue = 0;
+    }
+
+    for (let i = 0; i <= 0.1; i += 0.01) {
+      this.promotionCoefficientList.push((minimalValue + i).toFixed(2));
+    }
+  }
+
+  setPromotionDateButtonSelected(value: number) {
+    this.promotionDateButtonSelected = value;
+  }
+
+  setPromotionStepButtonSelected(value: number) {
+    this.promotionStepButtonSelected = value;
+  }
+
+  setPromotionCoefficient(coefficient: number) {
+    this.promotionCoefficient = coefficient;
+  }
+}
+
+class TableParams {
+  page: number;
+  pageSize: number;
+  collectionSize: number;
+
+  defineTablePaginationParams(page: number, pageSize: number, collectionSize: number) {
+    this.page = page;
+    this.pageSize = pageSize;
+    this.collectionSize = collectionSize;
+  }
 }
 
 class LineChart {
   lineChartData: ChartDataSets[] = [
-    { data: [], label: '' }];
+    {data: [], label: ''}];
 
   lineChartLabels: Label[];
 
@@ -134,6 +242,20 @@ class LineChart {
       backgroundColor: '#F4B300'
     },
   ];
-}
 
+  setLineChartData(promotionData: PromotionData[], criterionName: string): ChartDataSets[] {
+    return [
+      {
+        data: promotionData.map(value => value.promotionValue),
+        label: `${criterionName} promotion`
+      },
+    ];
+  }
+
+  setLineChartLabels(promotionData: PromotionData[]): Label[] {
+    return promotionData.map((value: PromotionData) => {
+      return String(value.year);
+    });
+  }
+}
 

@@ -22,16 +22,16 @@ public class ExportDataImpl implements ExportDataDao {
     }
 
     @Override
-    public String getUniversityNameByUniversityId(int universityId) {
+    public int getUniversityIdByUniversityName(String universityName) {
         return sessionFactory.getCurrentSession()
-                .createQuery("select institutionName from russian_universities_in_QS where id =:universityId", String.class)
-                .setParameter("universityId", universityId).list().get(0);
+                .createQuery("select id from russian_universities_in_QS where institutionName =:universityName", Integer.class)
+                .setParameter("universityName", universityName).list().get(0);
     }
 
     @Override
-    public String getUniversityCriterionByCriterionId(int criterionId) {
+    public int getCriterionIdByUniversityCriterion(String criterionName) {
         return sessionFactory.getCurrentSession()
-                .createQuery("select criterionName from criteria_table_in_QS where id =:criterionId", String.class)
-                .setParameter("criterionId", criterionId).list().get(0);
+                .createQuery("select id from criteria_table_in_QS where criterionName =:criterionName", Integer.class)
+                .setParameter("criterionName", criterionName).list().get(0);
     }
 }
