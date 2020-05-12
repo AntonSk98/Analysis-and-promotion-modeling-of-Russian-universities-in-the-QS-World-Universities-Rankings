@@ -30,18 +30,53 @@ There are some screenshots of the web-app belo.
 
 ## Dynamical modeling (client-side view)
 
-<b>Home page screenshot example</b>
+<b>Home page screenshot (first part)</b>
 
-![Alt text](./web_app_main_page_example.PNG)
+![Alt text](./1_web.PNG)
 
-<b>General information about a university example</b>
+<b>Home page screenshot (second part)</b>
 
-![Alt text](./web_app_general_information_page_example.PNG)
+![Alt text](./2_web.PNG)
 
-<b>Dynamic modeling promotion example<b>
+<b>General information (university criteria) about a university example</b>
 
-![Alt text](./web_app_dynamic_modeling_page_example.PNG)
+![Alt text](./3_web.PNG)
 
+<b>General information (university classification) about a university example</b>
+
+![Alt text](./4_web.PNG)
+
+<b>Dynamic modeling promotion example (by Academic Reputation) - first part<b>
+
+![Alt text](./5_web.PNG)
+
+<b>Dynamic modeling promotion example (by Academic Reputation) - second part<b>
+
+![Alt text](./6_web.PNG)
+
+<b>It's possible to export all promotion dynamic models by criterion into an HTML file (example below)<b>
+
+![Alt text](./7_web.PNG)
+
+<b>It's also possible as well to export all promotion dynamic models by criterion into an Excel file (example below)<b>
+
+![Alt text](./8_web.PNG)
+
+##Example of how the app works
+
+<b>Below you can look at the example of this working web-application!<b>
+
+![Alt text](./application_example.gif)
+
+## Client launch
+First, just configure and launch Angular CLI Server
+Second, you can run this client side part py the command 'ng serve'
+
+## Server launch
+1) In order to launch a server, it must be configured a Tomcat server
+2) At the first launch, in order to initialize a database, in VM-options it must be written the following: '-Dinitial_start=true'.
+This command drops the scema if already exists, initialize the tables and populate them with needed initial values.
+3) After the database was initialized, and if the server is run again, the next VM-option must be set in Tomcat configuration: '-Dinitial_start=false'
 
 ## Further help
 If you have any question regarding this project, do not hesitate to contact me via e-mail 'antonskripin@gmail.com'
