@@ -26,6 +26,12 @@ Angular is used to develop a client-side app.
 Spring is used to develop a server.
 PostgreSQL is chosen to keep and operate with data.
 
+## Database structure
+
+Here is represented the database structure diagram which is used in this app
+
+![Alt text](./database_structure.PNG)
+
 There are some screenshots of the web-app belo.
 
 ## Dynamical modeling (client-side view)
