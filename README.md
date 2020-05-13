@@ -32,7 +32,7 @@ Here is represented the database structure diagram which is used in this app
 
 ![Alt text](./database_structure.PNG)
 
-There are some screenshots of the web-app belo.
+# There are some screenshots of the web-app below.
 
 ## Dynamical modeling (client-side view)
 
