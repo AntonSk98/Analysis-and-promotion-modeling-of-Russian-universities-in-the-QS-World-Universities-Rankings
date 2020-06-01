@@ -65,8 +65,16 @@
   color: #F4B300;
 }
 
-.w-55 {
+.fit {
+  width: max-content !important;
+}
+
+.fill-all {
   width: 60% !important;
+}
+
+.w-40 {
+  width: 40% !important;
 }
 
 .w-62 {

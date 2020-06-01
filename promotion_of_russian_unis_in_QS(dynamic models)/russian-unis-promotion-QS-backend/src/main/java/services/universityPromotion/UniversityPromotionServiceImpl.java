@@ -209,14 +209,16 @@ public class UniversityPromotionServiceImpl implements UniversityPromotionServic
         else
             promotionCoefficient = 1;
 
-        while (currentPromotionValue <= averagePromotionValue) {
-            if (isPromotionAscendant)
+        while (currentPromotionValue < averagePromotionValue) {
+            if (isPromotionAscendant || averagePromotionValue == 100)
                 shift = promotionCoefficient += 0.05;
             else
                 shift = promotionCoefficient -= 0.05;
 
             currentPromotionValue = getPromotionValues(startDate, startValue, desiredValue, finishDate, stepOfPromotion, shift, adjustedTime).getLast().getPromotionValue();
         }
+        if (promotionCoefficient > 1)
+            promotionCoefficient = 1;
         return Double.parseDouble(decimalFormat.format(promotionCoefficient));
     }
 
